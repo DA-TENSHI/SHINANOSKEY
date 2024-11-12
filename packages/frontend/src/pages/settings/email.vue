@@ -48,7 +48,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<div v-if="!instance.enableEmail" class="_gaps_m">
 			<MkInfo>{{ i18n.ts.emailNotSupported }}</MkInfo>
 		</div>
-	</MkSpacer>
+		</MkSpacer>
 </MkStickyContainer>
 </template>
 

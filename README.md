@@ -1,11 +1,11 @@
-# taiyme (taiy fork)
+# 信濃式taiyme改 (SHINANO taiyme fork)
 
-[taiyme](https://github.com/taiyme/misskey)は、[Misskey](https://github.com/misskey-dev/misskey)から派生したオープンソースのソフトウェアです。
+[信濃式taiyme改](https://github.com/DA-TENSHI/VRTL_with_taiyme)は[taiyme](https://github.com/taiyme/misskey)より派生したフォークです。
 
 ## 機能のリクエスト・問題の報告
 
-GitHubのアカウントをお持ちの方は [Issue](https://github.com/taiyme/misskey/issues) を、それ以外の方は [リクエストフォーム](https://forms.gle/pwBVN29KnJbbs7Gk9) をご利用ください。
+なんかIssueとかよくわからんので[しなのあれぐれっどのアカウント](https://misskey.shinanomai.xyz/@SHINANOMAI)または[mail(mailtoリンク)](admin@shinanomai.xyz)へ。
 
 ## 支援について
 
-[Patreon](https://www.patreon.com/taiy) もしくは <https://u.taiy.me/donate> を参照してください。
+いつか自分で鯖弄れるようになったら解禁するかも

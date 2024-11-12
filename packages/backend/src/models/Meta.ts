@@ -574,6 +574,11 @@ export class MiMeta {
 	})
 	public preservedUsernames: string[];
 
+	@Column('integer', {
+		default: 300,
+	})
+	public vmimiRelayTimelineCacheMax: number;
+
 	@Column('boolean', {
 		default: false,
 	})

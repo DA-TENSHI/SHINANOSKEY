@@ -39,10 +39,13 @@ const props = withDefaults(defineProps<{
 	withRenotes?: boolean;
 	withReplies?: boolean;
 	onlyFiles?: boolean;
+	withLocalOnly?: boolean;
+	withLocalOnly?: boolean;
 }>(), {
 	withRenotes: true,
 	withReplies: false,
 	onlyFiles: false,
+	withLocalOnly: true,
 });
 
 const emit = defineEmits<{
@@ -54,15 +57,16 @@ provide('inTimeline', true);
 provide('inChannel', computed(() => props.src === 'channel'));
 
 type TimelineQueryType = {
-	antennaId?: string;
-	withRenotes?: boolean;
-	withReplies?: boolean;
-	withFiles?: boolean;
-	visibility?: string;
-	listId?: string;
-	channelId?: string;
-	roleId?: string;
-};
+  antennaId?: string,
+  withRenotes?: boolean,
+  withReplies?: boolean,
+  withFiles?: boolean,
+  withLocalOnly?: boolean,
+  visibility?: string,
+  listId?: string,
+  channelId?: string,
+  roleId?: string
+}
 
 const prComponent = shallowRef<InstanceType<typeof MkPullToRefresh>>();
 const tlComponent = shallowRef<InstanceType<typeof MkNotes>>();
@@ -121,6 +125,20 @@ function connectChannel() {
 		connection = stream.useChannel('globalTimeline', {
 			withRenotes: props.withRenotes,
 			withFiles: props.onlyFiles ? true : undefined,
+		});
+	} else if (props.src === 'vmimi-relay') {
+		connection = stream.useChannel('vmimiRelayTimeline', {
+			withRenotes: props.withRenotes,
+			withFiles: props.onlyFiles ? true : undefined,
+			withReplies: props.withReplies,
+			withLocalOnly: props.withLocalOnly,
+		});
+	} else if (props.src === 'vmimi-relay-social') {
+		connection = stream.useChannel('vmimiRelayHybridTimeline', {
+			withRenotes: props.withRenotes,
+			withFiles: props.onlyFiles ? true : undefined,
+			withReplies: props.withReplies,
+			withLocalOnly: props.withLocalOnly,
 		});
 	} else if (props.src === 'mentions') {
 		connection = stream.useChannel('main');
@@ -188,11 +206,42 @@ function updatePaginationQuery() {
 			withReplies: props.withReplies,
 			withFiles: props.onlyFiles ? true : undefined,
 		};
+	} else if (props.src === 'vmimi') {
+		endpoint = 'notes/vmimi-relay-timeline';
+		query = {
+			withRenotes: props.withRenotes,
+			withFiles: props.onlyFiles ? true : undefined,
+			withReplies: props.withReplies,
+		};
+	} else if (props.src === 'vmimiHybrid') {
+		endpoint = 'notes/vmimi-hybrid-timeline';
+		query = {
+			withRenotes: props.withRenotes,
+			withFiles: props.onlyFiles ? true : undefined,
+			withReplies: props.withReplies,
+			withLocalOnly: props.withLocalOnly,
+		};
 	} else if (props.src === 'global') {
 		endpoint = 'notes/global-timeline';
 		query = {
 			withRenotes: props.withRenotes,
 			withFiles: props.onlyFiles ? true : undefined,
+		};
+	} else if (props.src === 'vmimi-relay') {
+		endpoint = 'notes/vmimi-relay-timeline';
+		query = {
+			withRenotes: props.withRenotes,
+			withFiles: props.onlyFiles ? true : undefined,
+			withReplies: props.withReplies,
+			withLocalOnly: props.withLocalOnly,
+		};
+	} else if (props.src === 'vmimi-relay-social') {
+		endpoint = 'notes/vmimi-hybrid-timeline';
+		query = {
+			withRenotes: props.withRenotes,
+			withFiles: props.onlyFiles ? true : undefined,
+			withReplies: props.withReplies,
+			withLocalOnly: props.withLocalOnly,
 		};
 	} else if (props.src === 'mentions') {
 		endpoint = 'notes/mentions';

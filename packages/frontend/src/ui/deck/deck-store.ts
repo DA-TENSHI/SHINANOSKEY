@@ -46,10 +46,11 @@ export type Column = {
 	channelId?: string;
 	roleId?: string;
 	excludeTypes?: typeof notificationTypes[number][];
-	tl?: BasicTimelineType;
+	tl?: 'home' | 'local' | 'social' | 'global' | 'vmimi-relay' | 'vmimi-relay-social';
 	withRenotes?: boolean;
 	withReplies?: boolean;
 	onlyFiles?: boolean;
+	withLocalOnly?: boolean;
 	soundSetting: SoundStore;
 };
 

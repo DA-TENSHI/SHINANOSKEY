@@ -54,6 +54,7 @@ run.bat
 api-docs.json
 *.log
 /redis
+
 .DS_Store
 /files
 ormconfig.json

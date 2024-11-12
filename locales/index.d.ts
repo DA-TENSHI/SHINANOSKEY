@@ -4827,6 +4827,10 @@ export interface Locale extends ILocale {
      */
     readonly "hideRepliesToOthersInTimelineAll": string;
     /**
+     * TLに連合なし投稿を含める
+     */
+    readonly "showLocalOnlyInTimeline": string;
+    /**
      * この操作は元に戻せません。本当にTLに現在フォロー中の人全員の返信を含めるようにしますか？
      */
     readonly "confirmShowRepliesAll": string;
@@ -5520,6 +5524,14 @@ export interface Locale extends ILocale {
              */
             readonly "global": string;
             /**
+             * VirtualKemomimiリレーに参加しているサーバーからの投稿を見られます。
+             */
+            readonly "vmimi": string;
+            /**
+             * Vみみタイムラインの投稿とホームタイムラインの投稿が両方表示されます。
+             */
+            readonly "vmimiHybrid": string;
+            /**
              * それぞれのタイムラインは、画面上部でいつでも切り替えられます。
              */
             readonly "description2": string;
@@ -5656,6 +5668,14 @@ export interface Locale extends ILocale {
          * グローバルタイムラインでは、接続している他のすべてのサーバーからの投稿を見られます。
          */
         readonly "global": string;
+        /**
+         * ぶいみみリレータイムラインでは、バーチャルケモミミリレーサーバーに参加しているサーバーのユーザー全員の投稿を見られます。
+         */
+        readonly "vmimi-relay": string;
+        /**
+         * ぶいみみソーシャルタイムラインには、ホームタイムラインとぶいみみリレータイムラインの投稿が両方表示されます。
+         */
+        readonly "vmimi-relay-social": string;
     };
     readonly "_serverRules": {
         /**
@@ -6795,6 +6815,10 @@ export interface Locale extends ILocale {
              * ローカルタイムラインの閲覧
              */
             readonly "ltlAvailable": string;
+            /**
+             * ぶいみみリレータイムラインの閲覧
+             */
+            readonly "vrtlAvailable": string;
             /**
              * パブリック投稿の許可
              */
@@ -8974,6 +8998,14 @@ export interface Locale extends ILocale {
          * グローバル
          */
         readonly "global": string;
+        /**
+         * ぶいみみリレー
+         */
+        readonly "vmimi-relay": string;
+        /**
+         * ぶいみみソーシャル
+         */
+        readonly "vmimi-relay-social": string;
     };
     readonly "_play": {
         /**

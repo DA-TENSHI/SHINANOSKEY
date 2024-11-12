@@ -4,17 +4,34 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<MkStickyContainer>
-	<template #header><MkPageHeader :actions="headerActions" :tabs="headerTabs"/></template>
-	<MkSpacer :contentMax="900">
-		<div>
-			<div v-if="!loading" class="_gaps">
-				<MkInfo>{{ i18n.tsx._profile.avatarDecorationMax({ max: $i.policies.avatarDecorationLimit }) }} ({{ i18n.tsx.remainingN({ n: $i.policies.avatarDecorationLimit - $i.avatarDecorations.length }) }})</MkInfo>
+	<MkStickyContainer>
+		<template #header><MkPageHeader :actions="headerActions" :tabs="headerTabs"/></template>
+		<MkSpacer :contentMax="900">
+			<div>
+				<div v-if="!loading" class="_gaps">
+					<MkInfo>{{ i18n.tsx._profile.avatarDecorationMax({ max: $i.policies.avatarDecorationLimit }) }} ({{ i18n.tsx.remainingN({ n: $i.policies.avatarDecorationLimit - $i.avatarDecorations.length }) }})</MkInfo>
 
-				<MkAvatar :class="$style.avatar" :user="$i" forceShowDecoration/>
+					<MkAvatar :class="$style.avatar" :user="$i" forceShowDecoration/>
 
-				<div v-if="$i.avatarDecorations.length > 0" v-panel :class="$style.current" class="_gaps_s">
-					<div>{{ i18n.ts.inUse }}</div>
+					<div v-if="$i.avatarDecorations.length > 0" v-panel :class="$style.current" class="_gaps_s">
+						<div>{{ i18n.ts.inUse }}</div>
+
+						<div :class="$style.decorations">
+							<XDecoration
+								v-for="(avatarDecoration, i) in $i.avatarDecorations"
+								:key="avatarDecoration.id"
+								:decoration="avatarDecorations.find(d => d.id === avatarDecoration.id)!"
+								:angle="avatarDecoration.angle"
+								:flipH="avatarDecoration.flipH"
+								:offsetX="avatarDecoration.offsetX"
+								:offsetY="avatarDecoration.offsetY"
+								:active="true"
+								@click="openDecoration(avatarDecorations.find(d => d.id === avatarDecoration.id)!, i)"
+							/>
+						</div>
+
+						<MkButton danger @click="detachAllDecorations">{{ i18n.ts.detachAll }}</MkButton>
+					</div>
 
 					<div :class="$style.decorations">
 						<XDecoration
@@ -29,25 +46,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 							@click="openDecoration(avatarDecorations.find(d => d.id === avatarDecoration.id)!, i)"
 						/>
 					</div>
-
-					<MkButton danger @click="detachAllDecorations">{{ i18n.ts.detachAll }}</MkButton>
 				</div>
-
-				<div :class="$style.decorations">
-					<XDecoration
-						v-for="avatarDecoration in avatarDecorations"
-						:key="avatarDecoration.id"
-						:decoration="avatarDecoration"
-						@click="openDecoration(avatarDecoration)"
-					/>
+				<div v-else>
+					<MkLoading/>
 				</div>
 			</div>
-			<div v-else>
-				<MkLoading/>
-			</div>
-		</div>
-	</MkSpacer>
-</MkStickyContainer>
+		</MkSpacer>
+	</MkStickyContainer>
 </template>
 
 <script lang="ts" setup>

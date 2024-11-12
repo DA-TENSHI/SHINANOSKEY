@@ -419,6 +419,10 @@ import type {
 	NotesFeaturedResponse,
 	NotesGlobalTimelineRequest,
 	NotesGlobalTimelineResponse,
+	NotesVmimiRelayTimelineRequest,
+	NotesVmimiRelayTimelineResponse,
+	NotesVmimiHybridTimelineRequest,
+	NotesVmimiHybridTimelineResponse,
 	NotesHybridTimelineRequest,
 	NotesHybridTimelineResponse,
 	NotesLocalTimelineRequest,
@@ -860,6 +864,8 @@ export type Endpoints = {
 	'notes/favorites/delete': { req: NotesFavoritesDeleteRequest; res: EmptyResponse };
 	'notes/featured': { req: NotesFeaturedRequest; res: NotesFeaturedResponse };
 	'notes/global-timeline': { req: NotesGlobalTimelineRequest; res: NotesGlobalTimelineResponse };
+	'notes/vmimi-relay-timeline': { req: NotesVmimiRelayTimelineRequest; res: NotesVmimiRelayTimelineResponse };
+	'notes/vmimi-hybrid-timeline': { req: NotesVmimiHybridTimelineRequest; res: NotesVmimiHybridTimelineResponse };
 	'notes/hybrid-timeline': { req: NotesHybridTimelineRequest; res: NotesHybridTimelineResponse };
 	'notes/local-timeline': { req: NotesLocalTimelineRequest; res: NotesLocalTimelineResponse };
 	'notes/mentions': { req: NotesMentionsRequest; res: NotesMentionsResponse };

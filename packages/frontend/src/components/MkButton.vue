@@ -139,129 +139,211 @@ function onMousedown(evt: MouseEvent): void {
 		text-decoration: none;
 	}
 
-	&:not(:disabled):hover {
-		background: var(--MI_THEME-buttonHoverBg);
+	function distance(p, q): number {
+		return Math.hypot(p.x - q.x, p.y - q.y);
 	}
 
-	&:not(:disabled):active {
-		background: var(--MI_THEME-buttonHoverBg);
+	function calcCircleScale(boxW, boxH, circleCenterX, circleCenterY): number {
+		const origin = { x: circleCenterX, y: circleCenterY };
+		const dist1 = distance({ x: 0, y: 0 }, origin);
+		const dist2 = distance({ x: boxW, y: 0 }, origin);
+		const dist3 = distance({ x: 0, y: boxH }, origin);
+		const dist4 = distance({ x: boxW, y: boxH }, origin);
+		return Math.max(dist1, dist2, dist3, dist4) * 2;
 	}
 
-	&.small {
-		font-size: 90%;
-		padding: 6px 12px;
+	function onMousedown(evt: MouseEvent): void {
+		const target = evt.target! as HTMLElement;
+		const rect = target.getBoundingClientRect();
+
+		const ripple = document.createElement('div');
+		ripple.classList.add(ripples.value!.dataset.childrenClass!);
+		ripple.style.top = (evt.clientY - rect.top - 1).toString() + 'px';
+		ripple.style.left = (evt.clientX - rect.left - 1).toString() + 'px';
+
+		ripples.value!.appendChild(ripple);
+
+		const circleCenterX = evt.clientX - rect.left;
+		const circleCenterY = evt.clientY - rect.top;
+
+		const scale = calcCircleScale(target.clientWidth, target.clientHeight, circleCenterX, circleCenterY);
+
+		window.setTimeout(() => {
+			ripple.style.transform = 'scale(' + (scale / 2) + ')';
+		}, 1);
+		window.setTimeout(() => {
+			ripple.style.transition = 'all 1s ease';
+			ripple.style.opacity = '0';
+		}, 1000);
+		window.setTimeout(() => {
+			if (ripples.value) ripples.value.removeChild(ripple);
+		}, 2000);
 	}
+	</script>
 
-	&.large {
-		font-size: 100%;
-		padding: 8px 16px;
-	}
-
-	&.full {
-		width: 100%;
-	}
-
-	&.rounded {
-		border-radius: 999px;
-	}
-
-	&.primary {
-		font-weight: bold;
-		color: var(--MI_THEME-fgOnAccent) !important;
-		background: var(--MI_THEME-accent);
-
-		&:not(:disabled):hover {
-			background: hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5)));
-		}
-
-		&:not(:disabled):active {
-			background: hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5)));
-		}
-	}
-
-	&.asLike {
-		background: rgba(255, 86, 125, 0.07);
-		color: #ff002f;
-
-		&:not(:disabled):hover {
-			background: rgba(255, 74, 116, 0.11);
-		}
-
-		&:not(:disabled):active {
-			background: rgba(224, 57, 96, 0.125);
-		}
-
-		> .ripples {
-			> .ripple {
-				background: rgba(255, 60, 106, 0.15);
-			}
-		}
-
-		&.primary {
-			background: rgb(241 97 132);
-
-			&:not(:disabled):hover {
-				background: rgb(241 92 128);
-			}
-
-			&:not(:disabled):active {
-				background: rgb(241 92 128);
-			}
-		}
-	}
-
-	&.transparent {
-		background: transparent;
-	}
-
-	&.gradate {
-		font-weight: bold;
-		color: var(--MI_THEME-fgOnAccent) !important;
-		background: linear-gradient(90deg, var(--MI_THEME-buttonGradateA), var(--MI_THEME-buttonGradateB));
-
-		&:not(:disabled):hover {
-			background: linear-gradient(90deg, hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))), hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))));
-		}
-
-		&:not(:disabled):active {
-			background: linear-gradient(90deg, hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))), hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))));
-		}
-	}
-
-	&.danger {
-		font-weight: bold;
-		color: #ff2a2a;
-
-		&.primary {
-			color: #fff;
-			background: #ff2a2a;
-
-			&:not(:disabled):hover {
-				background: #ff4242;
-			}
-
-			&:not(:disabled):active {
-				background: #d42e2e;
-			}
-		}
-	}
-
-	&:disabled {
-		opacity: 0.5;
-	}
-
-	&:focus-visible {
-		outline-offset: 2px;
-	}
-
-	&.inline {
-		display: inline-block;
-		width: auto;
+	<style lang="scss" module>
+	.root {
+		position: relative;
+		z-index: 1; // 他コンポーネントのbox-shadowに隠されないようにするため
+		display: block;
 		min-width: 100px;
+		width: max-content;
+		padding: 7px 14px;
+		text-align: center;
+		font-weight: normal;
+		font-size: 95%;
+		box-shadow: none;
+		text-decoration: none;
+		background: var(--MI_THEME-buttonBg);
+		border-radius: 5px;
+		overflow: hidden; // fallback (overflow: clip)
+		overflow: clip;
+		box-sizing: border-box;
+		transition: background 0.1s ease;
+
+		&:hover {
+			text-decoration: none;
+		}
+
+		&:not(:disabled):hover {
+			background: hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5)));
+		}
+
+		&:not(:disabled):active {
+			background: hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5)));
+		}
+
+		&.small {
+			font-size: 90%;
+			padding: 6px 12px;
+		}
+
+		&.large {
+			font-size: 100%;
+			padding: 8px 16px;
+		}
+
+		&.full {
+			width: 100%;
+		}
+
+		&.rounded {
+			border-radius: 999px;
+		}
+
+		&.primary {
+			font-weight: bold;
+			color: var(--MI_THEME-fgOnAccent) !important;
+			background: var(--MI_THEME-accent);
+
+			&:not(:disabled):hover {
+				background: hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5)));
+			}
+
+			&:not(:disabled):active {
+				background: hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5)));
+			}
+		}
+
+		&.asLike {
+			background: rgba(255, 86, 125, 0.07);
+			color: #ff002f;
+
+			&:not(:disabled):hover {
+				background: rgba(255, 74, 116, 0.11);
+			}
+
+		&:not(:disabled):hover {
+			background: linear-gradient(90deg, hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))), hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))));
+		}
+
+		&:not(:disabled):active {
+			background: linear-gradient(90deg, hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))), hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))));
+		}
+
+		&.transparent {
+			background: transparent;
+		}
+
+		&.gradate {
+			font-weight: bold;
+			color: var(--MI_THEME-fgOnAccent) !important;
+			background: linear-gradient(90deg, var(--MI_THEME-buttonGradateA), var(--MI_THEME-buttonGradateB));
+
+			&:not(:disabled):hover {
+				background: linear-gradient(90deg, hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))), hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))));
+			}
+
+			&:not(:disabled):active {
+				background: linear-gradient(90deg, hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))), hsl(from var(--MI_THEME-accent) h s calc(l + (var(--TMS-hsl-base-l) * 5))));
+			}
+		}
+
+		&.danger {
+			font-weight: bold;
+			color: #ff2a2a;
+
+			&.primary {
+				color: #fff;
+				background: #ff2a2a;
+
+				&:not(:disabled):hover {
+					background: #ff4242;
+				}
+
+				&:not(:disabled):active {
+					background: #d42e2e;
+				}
+			}
+		}
+
+		&:disabled {
+			opacity: 0.5;
+		}
+
+		&:focus-visible {
+			outline-offset: 2px;
+		}
+
+		&.inline {
+			display: inline-block;
+			width: auto;
+			min-width: 100px;
+		}
+
+		&.primary > .ripples > .ripple {
+			background: rgba(0, 0, 0, 0.15);
+		}
 	}
 
-	&.primary > .ripples > .ripple {
-		background: rgba(0, 0, 0, 0.15);
+	.ripples {
+		position: absolute;
+		z-index: 0;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		border-radius: 6px;
+		overflow: hidden; // fallback (overflow: clip)
+		overflow: clip;
+		pointer-events: none;
+	}
+
+	.ripple {
+		position: absolute;
+		width: 2px;
+		height: 2px;
+		border-radius: 100%;
+		background: rgba(0, 0, 0, 0.1);
+		opacity: 1;
+		transform: scale(1);
+		transition: all 0.5s cubic-bezier(0,.5,0,1);
+	}
+
+	.content {
+		position: relative;
+		z-index: 1;
+		pointer-events: none;
 	}
 }
 
