@@ -4,7 +4,7 @@
 
 ## 機能のリクエスト・問題の報告
 
-なんかIssueとかよくわからんので[しなのあれぐれっどのアカウント](https://misskey.shinanomai.xyz/@SHINANOMAI)または[mail(mailtoリンク)](admin@shinanomai.xyz)へ。
+Issueへどうぞ。
 
 ## 支援について
 
