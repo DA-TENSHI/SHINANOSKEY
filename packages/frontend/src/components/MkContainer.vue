@@ -59,19 +59,37 @@ SPDX-License-Identifier: AGPL-3.0-only
 		maxHeight: null,
 	});
 
-	const rootEl = shallowRef<HTMLElement>();
-	const contentEl = shallowRef<HTMLElement>();
-	const headerEl = shallowRef<HTMLElement>();
-	const showBody = ref(props.expanded);
-	const omitted = ref(false);
-	const manuallyOperated = ref(false);
+	if (rootEl.value) rootEl.value.style.setProperty('--maxHeight', props.maxHeight + 'px');
 
-	function enter(el: Element) {
-		if (!(el instanceof HTMLElement)) return;
-		const elementHeight = el.getBoundingClientRect().height;
-		el.style.height = '0';
-		el.offsetHeight; // reflow
-		el.style.height = `${Math.min(elementHeight, props.maxHeight ?? Infinity)}px`;
+	calcOmit();
+
+	if (contentEl.value) omitObserver.observe(contentEl.value);
+});
+
+onUnmounted(() => {
+	omitObserver.disconnect();
+});
+</script>
+
+<style lang="scss" module>
+.transition_toggle_enterActive,
+.transition_toggle_leaveActive {
+	overflow-y: clip;
+	transition: opacity 0.5s, height 0.5s !important;
+}
+.transition_toggle_enterFrom,
+.transition_toggle_leaveTo {
+	opacity: 0;
+}
+
+.root {
+	position: relative;
+	overflow: clip;
+	contain: content;
+
+	&.naked {
+		background: transparent !important;
+		box-shadow: none !important;
 	}
 
 	function afterEnter(el: Element) {
@@ -143,34 +161,51 @@ SPDX-License-Identifier: AGPL-3.0-only
 	.transition_toggle_leaveTo {
 		opacity: 0;
 	}
+}
 
-	.root {
-		position: relative;
-		overflow: hidden; // fallback (overflow: clip)
-		overflow: clip;
-		contain: content;
+.titleIcon {
+	margin-right: 6px;
+}
 
-		&.naked {
-			background: transparent !important;
-			box-shadow: none !important;
-		}
+.headerSub {
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	right: 0;
+	height: 100%;
+}
 
-		&.scrollable {
-			display: flex;
-			flex-direction: column;
+.headerButton {
+	width: 42px;
+	height: 100%;
+}
 
-			> .content {
-				overflow: auto;
-			}
-		}
+.content {
+	--MI-stickyTop: 0px;
+}
 
-		&.thin {
-			> .header {
-				> .title {
-					padding: 8px 10px;
-					font-size: 0.9em;
-				}
-			}
+.omitted {
+	position: relative;
+	min-height: 64px; // .showMoreFade
+	max-height: var(--maxHeight);
+	overflow: clip;
+}
+
+.showMoreFade {
+	display: block;
+	position: absolute;
+	z-index: 10;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 64px; // .omitted
+	background: linear-gradient(0deg, var(--MI_THEME-panel), rgb(from var(--MI_THEME-panel) r g b / 0));
+}
+
+.showMoreFade {
+	&:hover {
+		> .fadeLabel {
+			background: var(--MI_THEME-panelHighlight);
 		}
 	}
 

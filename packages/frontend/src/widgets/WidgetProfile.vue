@@ -81,7 +81,6 @@ defineExpose<WidgetComponentExpose>({
 
 .body {
 	text-overflow: ellipsis;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	margin-left: -10px;
 	padding: 10px;

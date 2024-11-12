@@ -130,7 +130,6 @@ onMounted(() => {
 	user-select: none;
 	filter: drop-shadow(0px 2px 2px #00000044);
 	box-shadow: 0 1px 0px #ffffff88 inset;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 }
 

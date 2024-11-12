@@ -155,92 +155,46 @@ SPDX-License-Identifier: AGPL-3.0-only
 		reactiveHide: hideRef,
 		reactiveSensitive: sensitiveRef,
 		reactiveIAmOwner: iAmOwnerRef,
-	} = useReactiveDriveFile(() => props.image);
+		mock,
+		additionalMenu: [],
+	}), ev.currentTarget ?? ev.target);
+};
+</script>
 
-	const imageUrlRef = computed(() => {
-		if (props.raw || defaultStore.state.loadRawImages) {
-			return imageRef.value.url;
-		}
-		if (defaultStore.state.disableShowingAnimatedImages) {
-			return getStaticImageUrl(imageRef.value.url);
-		}
-		return imageRef.value.thumbnailUrl;
-	});
+<style lang="scss" module>
+.cq {
+	container: mediaImage / inline-size;
+}
 
-	const showImage = async () => {
-		if (!props.controls || !hideRef.value) return;
-		if (sensitiveRef.value && defaultStore.state.confirmWhenRevealingSensitiveMedia) {
-			const { canceled } = await confirm({
-				type: 'question',
-				text: i18n.ts.sensitiveMediaRevealConfirm,
-			});
-			if (canceled) return;
-		}
-		hideRef.value = false;
-	};
+.root {
+	--mediaImage-scale: 1;
+	box-sizing: border-box;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: clip;
+	border-radius: var(--mediaList-radius, 8px);
 
-	const showImageMenu = (ev: MouseEvent) => {
-		popupMenu(getMediaMenu({
-			reactiveDriveFile: imageRef,
-			reactiveHide: hideRef,
-			reactiveSensitive: sensitiveRef,
-			reactiveIAmOwner: iAmOwnerRef,
-			mock,
-			additionalMenu: [],
-		}), ev.currentTarget ?? ev.target);
-	};
-	</script>
+	&:focus-visible {
+		outline: none;
+	}
+}
 
-	<style lang="scss" module>
-	.cq {
-		container: mediaImage / inline-size;
+.rootVisible {
+	background-color: var(--MI_THEME-bg);
+	background-image: repeating-linear-gradient(
+		135deg,
+		transparent 0px 10px,
+		var(--c) 6px 16px
+	);
+
+	&,
+	html[data-color-scheme=light] & {
+		--c: color-mix(in srgb, #000000 3.75%, var(--MI_THEME-bg));
 	}
 
-	.root {
-		--mediaImage-scale: 1;
-		box-sizing: border-box;
-		position: relative;
-		width: 100%;
-		height: 100%;
-		overflow: hidden; // fallback (overflow: clip)
-		overflow: clip;
-		border-radius: var(--mediaList-radius, 8px);
-
-		&:focus-visible {
-			outline: none;
-		}
-	}
-
-	.rootVisible {
-		background-color: var(--MI_THEME-bg);
-		background-image: repeating-linear-gradient(
-			135deg,
-			transparent 0px 10px,
-			var(--c) 6px 16px
-		);
-
-		&,
-		html[data-color-scheme=light] & {
-			--c: color-mix(in srgb, #000000 3.75%, var(--MI_THEME-bg));
-		}
-
-		html[data-color-scheme=dark] & {
-			--c: color-mix(in srgb, #ffffff 7.5%, var(--MI_THEME-bg));
-		}
-	}
-
-	.rootSensitive {
-		&::after {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			pointer-events: none;
-			border-radius: inherit;
-			box-shadow: inset 0 0 0 4px var(--MI_THEME-warn);
-		}
+	html[data-color-scheme=dark] & {
+		--c: color-mix(in srgb, #ffffff 7.5%, var(--MI_THEME-bg));
 	}
 
 	.hideInfo {

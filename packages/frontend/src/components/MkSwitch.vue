@@ -43,23 +43,23 @@ SPDX-License-Identifier: AGPL-3.0-only
 		helpText: undefined,
 	});
 
-	const emit = defineEmits<{
-		(ev: 'update:modelValue', v: boolean): void;
-		(ev: 'change', v: boolean): void;
-	}>();
+const emit = defineEmits<{
+	(ev: 'update:modelValue', v: boolean): void;
+	(ev: 'change', v: boolean): void;
+}>();
 
 	const checked = computed(() => unref(props.modelValue));
 	const disabled = computed(() => unref(props.disabled));
 
 	const onKeydown = filterKeyboardEnterOrSpace(() => toggle());
 
-	const toggle = () => {
-		if (disabled.value) return;
-		const result = !checked.value;
-		emit('update:modelValue', result);
-		emit('change', result);
-	};
-	</script>
+const toggle = () => {
+	if (disabled.value) return;
+	const result = !checked.value;
+	emit('update:modelValue', result);
+	emit('change', result);
+};
+</script>
 
 	<style lang="scss" module>
 	.root {

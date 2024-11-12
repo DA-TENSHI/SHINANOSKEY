@@ -42,7 +42,6 @@ import { $i } from '@/account.js';
 	width: 100%;
 	line-height: var(--height);
 	height: var(--height);
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	contain: strict;
 	background: var(--MI_THEME-accent);
@@ -74,7 +73,6 @@ import { $i } from '@/account.js';
 .body {
 	min-width: 0;
 	flex: 1;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	white-space: nowrap;
 	text-overflow: ellipsis;

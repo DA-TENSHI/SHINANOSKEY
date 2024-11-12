@@ -22,15 +22,15 @@ export const projectMembers = [
 		href: 'https://github.com/cffnpwr',
 		iconUrl: 'https://avatars.githubusercontent.com/u/86540016?v=4',
 	},
-] as const satisfies Contributor[];
-
-export const contributors = [
 	{
 		name: '@souhait0614',
 		href: 'https://github.com/souhait0614',
 		iconUrl: 'https://avatars.githubusercontent.com/u/62732828?v=4',
 	},
-] as const satisfies Contributor[];
+] satisfies Contributor[] as Contributor[];
+
+export const contributors = [
+] satisfies Contributor[] as Contributor[];
 
 export const patrons = [
 	'すえ',
@@ -44,4 +44,5 @@ export const patrons = [
 	'Yagileo',
 	'nanasina',
 	'すい',
-] as const satisfies Patron[];
+	'ポンの助',
+] satisfies Patron[] as Patron[];

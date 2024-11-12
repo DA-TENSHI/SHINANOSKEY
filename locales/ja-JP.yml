@@ -2802,12 +2802,11 @@ _tms:
   taiy: "taiy"
   taiyme: "taiyme"
   aboutTaiyme: "taiymeについて"
-  taiymeSettings: "taiyme拡張機能"
-  taiymeFlags: "taiyme実験的機能"
+  taiymeFeatures: "taiyme限定機能"
+  taiymeFeaturesDescription: "これらの機能はtaiymeで独自実装したものです。"
   poweredByTaiyme: "{name}は、Misskeyの派生であるtaiymeを使用したサーバーのひとつです。"
-  supportX: "{name}を支援"
+  supportTaiy: "taiyを支援する"
   commitHash: "コミットハッシュ"
-  reportIssuesToGithub: "問題の報告や要望はGitHubで受け付けています。"
   sensitiveImage: "センシティブな画像"
   sensitiveVideo: "センシティブな動画"
   sensitiveAudio: "センシティブな音声"
@@ -2825,14 +2824,11 @@ _tms:
   taiymeUpdated: "taiymeが更新されました！"
   updatedX: "{x}が更新されました！"
   _about:
-    title: "taiymeについて"
-    description: "taiymeは、Misskeyから派生したオープンソースのソフトウェアです。"
+    taiymeIsOSS: "taiymeは、Misskeyから派生したオープンソースのソフトウェアです。"
     projectMembers: "プロジェクトメンバー"
     contributors: "コントリビューター"
     patrons: "支援者"
-  _settings:
-    title: "taiyme拡張機能"
-    description: "これらの機能はtaiymeで独自実装したものです。"
+  _features:
     _tickerPosition:
       label: "ノートのサーバー情報の表示位置"
       default: "デフォルト"
@@ -2855,12 +2851,6 @@ _tms:
     _pullToRefreshAllReload:
       label: "「引っ張ってリロード」でページ全体を再読み込みする"
       caption: "構成しているページ全体を再読み込みする動作に置き換えます。"
-  _flags:
-    title: "taiyme実験的機能"
-    description: "これらの機能はtaiymeで独自実装したものです。"
-    warning: "これらの設定を有効にすると、ページの表示や挙動に深刻な影響を及ぼし、{name}が正常に利用できなくなる可能性があります。"
-    forceFetchX: "{x}を強制取得"
-    openX: "{x}を開く"
     _preventLongPressContextMenu:
       label: "長押しによるコンテキストメニューイベントの発行を防ぐ"
       caption: "長押しを含む操作が中断される問題を解消します。"

@@ -75,7 +75,6 @@ onUnmounted(() => {
 	position: relative;
 	min-height: 64px; // .showMoreFade
 	max-height: v-bind("props.maxHeight + 'px'");
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 }
 

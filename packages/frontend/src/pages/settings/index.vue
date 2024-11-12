@@ -295,7 +295,6 @@ const menuDef = computed<ISuperMenuDefinitions>(() => [{
 
 		@supports (height: 100cqh) {
 			height: 100cqh;
-			overflow: hidden; // fallback (overflow: clip)
 			overflow: clip;
 			contain: strict;
 		}

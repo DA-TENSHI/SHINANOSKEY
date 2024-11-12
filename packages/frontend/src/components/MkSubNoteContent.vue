@@ -55,7 +55,6 @@ const collapsed = ref(isLong);
 	position: relative;
 	min-height: 64px; // .showMoreFade
 	max-height: 9em;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 }
 

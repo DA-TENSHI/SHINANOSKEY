@@ -139,7 +139,6 @@ const props = defineProps<{
 
 		> .thumbnail {
 			height: 80px;
-			overflow: hidden; // fallback (overflow: clip)
 			overflow: clip;
 		}
 

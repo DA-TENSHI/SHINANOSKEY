@@ -48,7 +48,6 @@ const rawHtml = computed(() => {
 	display: block;
 	margin: auto;
 	width: fit-content;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 }
 </style>

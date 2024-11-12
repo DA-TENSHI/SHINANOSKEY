@@ -35,10 +35,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 					<div :class="$style.decorations">
 						<XDecoration
-							v-for="avatarDecoration in avatarDecorations"
+							v-for="(avatarDecoration, i) in $i.avatarDecorations"
 							:key="avatarDecoration.id"
-							:decoration="avatarDecoration"
-							@click="openDecoration(avatarDecoration)"
+							:decoration="avatarDecorations.find(d => d.id === avatarDecoration.id)!"
+							:angle="avatarDecoration.angle"
+							:flipH="avatarDecoration.flipH"
+							:offsetX="avatarDecoration.offsetX"
+							:offsetY="avatarDecoration.offsetY"
+							:active="true"
+							@click="openDecoration(avatarDecorations.find(d => d.id === avatarDecoration.id)!, i)"
 						/>
 					</div>
 				</div>

@@ -10,35 +10,38 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 		<div v-if="disabled" :class="[$style.cover]"></div>
 	</div>
-	</template>
-	
-	<script lang="ts" setup>
-	defineProps<{
-		disabled?: boolean;
-	}>();
-	</script>
-	
-	<style lang="scss" module>
-	.root {
-		position: relative;
-	}
-	
-	.disabled {
-		opacity: 0.7;
-	}
-	
-	.cover {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		cursor: not-allowed;
-		background-image: repeating-linear-gradient(
-			135deg,
-			transparent 0px 10px,
-			var(--c) 6px 16px
-		);
-		--c: rgb(from var(--MI_THEME-error) r g b / 0.25);
-	}
-	</style>
+
+	<div v-if="disabled" :class="[$style.cover]"></div>
+</div>
+</template>
+
+<script lang="ts" setup>
+defineProps<{
+	disabled?: boolean;
+}>();
+</script>
+
+<style lang="scss" module>
+.root {
+	position: relative;
+}
+
+.disabled {
+	opacity: 0.7;
+}
+
+.cover {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	cursor: not-allowed;
+	background-image: repeating-linear-gradient(
+		135deg,
+		transparent 0px 10px,
+		var(--c) 6px 16px
+	);
+	--c: rgb(from var(--MI_THEME-error) r g b / 0.25);
+}
+</style>

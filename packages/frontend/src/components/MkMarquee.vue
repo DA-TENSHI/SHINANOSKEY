@@ -83,7 +83,6 @@ export default {
 
 <style lang="scss" module>
 .wrap {
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	animation-play-state: running;
 

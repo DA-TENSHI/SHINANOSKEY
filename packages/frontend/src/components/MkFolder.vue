@@ -122,7 +122,6 @@ onMounted(() => {
 <style lang="scss" module>
 .transition_toggle_enterActive,
 .transition_toggle_leaveActive {
-	overflow-y: hidden; // fallback (overflow-y: clip)
 	overflow-y: clip;
 	transition: opacity 0.3s, height 0.3s, transform 0.3s !important;
 }

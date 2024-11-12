@@ -231,7 +231,6 @@ function showMenu(ev: MouseEvent) {
 }
 
 .statsItem {
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	padding: 16px 20px;
 }
@@ -248,7 +247,6 @@ function showMenu(ev: MouseEvent) {
 }
 
 .tl {
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 }
 

@@ -383,7 +383,6 @@ function getActualReactedUsersCount(notification: Misskey.entities.Notification)
 .text {
 	display: flex;
 	width: 100%;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 }
 

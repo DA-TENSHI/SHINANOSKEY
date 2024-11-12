@@ -235,13 +235,11 @@ onMounted(() => {
 
 			> .main {
 				position: relative;
-				overflow: hidden; // fallback (overflow: clip)
 				overflow: clip;
 
 				> .banner-container {
 					position: relative;
 					height: 250px;
-					overflow: hidden; // fallback (overflow: clip)
 					overflow: clip;
 
 					> .banner {
@@ -564,7 +562,6 @@ onMounted(() => {
 .tl {
 	background: var(--MI_THEME-bg);
 	border-radius: var(--MI-radius);
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 }
 

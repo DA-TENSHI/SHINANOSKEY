@@ -22,7 +22,6 @@ const props = defineProps<{
 	background: var(--MI_THEME-infoWarnBg);
 	color: var(--MI_THEME-infoWarnFg);
 	border-radius: var(--MI-radius);
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 }
 

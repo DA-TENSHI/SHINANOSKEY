@@ -506,64 +506,96 @@ const {
 			mediaTickFrameId = null;
 		}
 	});
-	</script>
+}
 
-	<style lang="scss" module>
-	.cq {
-		container: mediaVideo / inline-size;
+watch(volume, (to) => {
+	if (videoEl.value) videoEl.value.volume = to;
+});
+
+watch(speed, (to) => {
+	if (videoEl.value) videoEl.value.playbackRate = to;
+});
+
+watch(loop, (to) => {
+	if (videoEl.value) videoEl.value.loop = to;
+});
+
+watch(hideRef, (to) => {
+	if (to && isFullscreen.value) {
+		document.exitFullscreen();
+		isFullscreen.value = false;
+	}
+});
+
+onMounted(() => {
+	init();
+});
+
+onActivated(() => {
+	init();
+});
+
+onDeactivated(() => {
+	isReady.value = false;
+	isPlaying.value = false;
+	isActuallyPlaying.value = false;
+	elapsedTimeMs.value = 0;
+	durationMs.value = 0;
+	bufferedEnd.value = 0;
+	stopVideoElWatch();
+	onceInit = false;
+	if (mediaTickFrameId) {
+		window.cancelAnimationFrame(mediaTickFrameId);
+		mediaTickFrameId = null;
+	}
+});
+</script>
+
+<style lang="scss" module>
+.cq {
+	container: mediaVideo / inline-size;
+}
+
+.root {
+	--mediaVideo-scale: 1;
+	box-sizing: border-box;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: clip;
+	border-radius: var(--mediaList-radius, 8px);
+
+	&:focus-visible {
+		outline: none;
+	}
+}
+
+.rootVisible {
+	background-color: var(--MI_THEME-bg);
+	background-image: repeating-linear-gradient(
+		135deg,
+		transparent 0px 10px,
+		var(--c) 6px 16px
+	);
+
+	&,
+	html[data-color-scheme=light] & {
+		--c: color-mix(in srgb, #000000 3.75%, var(--MI_THEME-bg));
 	}
 
-	.root {
-		--mediaVideo-scale: 1;
-		box-sizing: border-box;
-		position: relative;
-		width: 100%;
-		height: 100%;
-		overflow: hidden; // fallback (overflow: clip)
-		overflow: clip;
-		border-radius: var(--mediaList-radius, 8px);
-
-		&:focus-visible {
-			outline: none;
-		}
+	html[data-color-scheme=dark] & {
+		--c: color-mix(in srgb, #ffffff 7.5%, var(--MI_THEME-bg));
 	}
+}
 
-	.rootVisible {
-		background-color: var(--MI_THEME-bg);
-		background-image: repeating-linear-gradient(
-			135deg,
-			transparent 0px 10px,
-			var(--c) 6px 16px
-		);
+.rootSensitive {
+	position: relative;
 
-		&,
-		html[data-color-scheme=light] & {
-			--c: color-mix(in srgb, #000000 3.75%, var(--MI_THEME-bg));
-		}
-
-		html[data-color-scheme=dark] & {
-			--c: color-mix(in srgb, #ffffff 7.5%, var(--MI_THEME-bg));
-		}
-	}
-
-	.rootSensitive {
-		position: relative;
-
-		&::after {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			pointer-events: none;
-			border-radius: inherit;
-			box-shadow: inset 0 0 0 4px var(--MI_THEME-warn);
-		}
-	}
-
-	.hideInfo {
-		aspect-ratio: 16 / 9;
+	&::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 100%;
 		height: 100%;
 		display: flex;

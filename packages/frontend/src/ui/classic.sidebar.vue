@@ -38,6 +38,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<MkA v-click-anime class="item" activeClass="active" to="/settings" :behavior="settingsWindowed ? 'window' : null">
 		<i class="ti ti-settings ti-fw"></i><span class="text">{{ i18n.ts.settings }}</span>
 	</MkA>
+	<MkA v-click-anime class="item" activeClass="active" to="/tms/features" :behavior="settingsWindowed ? 'window' : null">
+		<i class="ti ti-settings-plus ti-fw"></i><span class="text">{{ i18n.ts._tms.taiymeFeatures }}</span>
+	</MkA>
 	<div class="divider"></div>
 	<div class="about">
 		<button v-click-anime class="item _button" @click="openInstanceMenu">
