@@ -83,18 +83,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 		position: relative;
 		overflow: hidden;
 		width: 100%;
-		height: 200px;
-		background-position: center;
-		background-size: cover;
-
-		> .fade {
-			position: absolute;
-			bottom: 0;
-			left: 0;
-			width: 100%;
-			height: 64px;
-			background: linear-gradient(0deg, var(--MI_THEME-panel), rgb(from var(--MI_THEME-panel) r g b / 0));
-		}
 
 		&:hover {
 			text-decoration: none;
