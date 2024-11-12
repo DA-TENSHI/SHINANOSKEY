@@ -39,7 +39,7 @@ const taiymeUpdated = computed(() => {
 
 function whatIsNew() {
 	modal.value?.close();
-	window.open(`https://github.com/DA-TENSHI/VRTL_with_taiyme/releases/tag/${version}`, '_blank');
+	window.open(`https://github.com/DA-TENSHI/SHINANOSKEY/releases/tag/${version}`, '_blank');
 }
 
 onMounted(() => {
