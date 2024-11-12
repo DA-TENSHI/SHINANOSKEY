@@ -1119,7 +1119,6 @@ defineExpose({
 	align-items: center;
 	margin-left: auto;
 	gap: 4px;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	padding-left: 4px;
 }
@@ -1202,7 +1201,6 @@ defineExpose({
 }
 
 .visibility {
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	text-overflow: ellipsis;
 	white-space: nowrap;

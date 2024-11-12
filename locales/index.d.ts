@@ -10485,29 +10485,25 @@ export interface Locale extends ILocale {
          */
         readonly "aboutTaiyme": string;
         /**
-         * taiyme拡張機能
+         * taiyme限定機能
          */
-        readonly "taiymeSettings": string;
+        readonly "taiymeFeatures": string;
         /**
-         * taiyme実験的機能
+         * これらの機能はtaiymeで独自実装したものです。
          */
-        readonly "taiymeFlags": string;
+        readonly "taiymeFeaturesDescription": string;
         /**
          * {name}は、Misskeyの派生であるtaiymeを使用したサーバーのひとつです。
          */
         readonly "poweredByTaiyme": ParameterizedString<"name">;
         /**
-         * {name}を支援
+         * taiyを支援する
          */
-        readonly "supportX": ParameterizedString<"name">;
+        readonly "supportTaiy": string;
         /**
          * コミットハッシュ
          */
         readonly "commitHash": string;
-        /**
-         * 問題の報告や要望はGitHubで受け付けています。
-         */
-        readonly "reportIssuesToGithub": string;
         /**
          * センシティブな画像
          */
@@ -10574,13 +10570,9 @@ export interface Locale extends ILocale {
         readonly "updatedX": ParameterizedString<"x">;
         readonly "_about": {
             /**
-             * taiymeについて
-             */
-            readonly "title": string;
-            /**
              * taiymeは、Misskeyから派生したオープンソースのソフトウェアです。
              */
-            readonly "description": string;
+            readonly "taiymeIsOSS": string;
             /**
              * プロジェクトメンバー
              */
@@ -10594,15 +10586,7 @@ export interface Locale extends ILocale {
              */
             readonly "patrons": string;
         };
-        readonly "_settings": {
-            /**
-             * taiyme拡張機能
-             */
-            readonly "title": string;
-            /**
-             * これらの機能はtaiymeで独自実装したものです。
-             */
-            readonly "description": string;
+        readonly "_features": {
             readonly "_tickerPosition": {
                 /**
                  * ノートのサーバー情報の表示位置
@@ -10683,28 +10667,6 @@ export interface Locale extends ILocale {
                  */
                 readonly "caption": string;
             };
-        };
-        readonly "_flags": {
-            /**
-             * taiyme実験的機能
-             */
-            readonly "title": string;
-            /**
-             * これらの機能はtaiymeで独自実装したものです。
-             */
-            readonly "description": string;
-            /**
-             * これらの設定を有効にすると、ページの表示や挙動に深刻な影響を及ぼし、{name}が正常に利用できなくなる可能性があります。
-             */
-            readonly "warning": ParameterizedString<"name">;
-            /**
-             * {x}を強制取得
-             */
-            readonly "forceFetchX": ParameterizedString<"x">;
-            /**
-             * {x}を開く
-             */
-            readonly "openX": ParameterizedString<"x">;
             readonly "_preventLongPressContextMenu": {
                 /**
                  * 長押しによるコンテキストメニューイベントの発行を防ぐ

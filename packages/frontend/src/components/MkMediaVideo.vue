@@ -520,7 +520,6 @@ onDeactivated(() => {
 	position: relative;
 	width: 100%;
 	height: 100%;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	border-radius: var(--mediaList-radius, 8px);
 

@@ -35,6 +35,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<MkA :class="$style.item" :activeClass="$style.active" to="/settings">
 			<i :class="$style.itemIcon" class="ti ti-settings ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.settings }}</span>
 		</MkA>
+		<MkA :class="$style.item" :activeClass="$style.active" to="/tms/features">
+			<i :class="$style.itemIcon" class="ti ti-settings-plus ti-fw"></i><span :class="$style.itemText">{{ i18n.ts._tms.taiymeFeatures }}</span>
+		</MkA>
 	</div>
 	<div :class="$style.bottom">
 		<button class="_button" :class="$style.post" data-cy-open-post-form @click="os.post">

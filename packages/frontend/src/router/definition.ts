@@ -580,16 +580,20 @@ const routes: RouteDef[] = [{
 	path: '/tms/about',
 	component: page(() => import('@/pages/tms/about.vue')),
 }, {
+	path: '/tms/features',
+	component: page(() => import('@/pages/tms/features.vue')),
+	loginRequired: true,
+}, {
 	path: '/tms/settings',
-	component: page(() => import('@/pages/tms/settings/index.vue')),
+	redirect: '/tms/features',
 	loginRequired: true,
 }, {
 	path: '/tms/flags',
-	component: page(() => import('@/pages/tms/flags/index.vue')),
+	redirect: '/tms/features',
 	loginRequired: true,
 }, {
 	path: '/settings/taiyme-services',
-	redirect: '/tms/settings',
+	redirect: '/tms/features',
 	loginRequired: true,
 }, {
 	name: 'index',

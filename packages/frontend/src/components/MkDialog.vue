@@ -245,7 +245,6 @@ const onInputKeydown = filterKeyboardNonComposing(evt => {
 	margin: 16px auto 0 auto;
 	box-sizing: border-box;
 	max-width: 320px;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	border: 1px solid var(--MI_THEME-divider);
 	border-radius: 8px;

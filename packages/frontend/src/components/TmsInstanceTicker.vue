@@ -39,7 +39,6 @@ const tickerStateRef = computed(() => getTickerState(props));
 <style lang="scss" module>
 //#region 共通
 .root {
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	display: block;
 	box-sizing: border-box;

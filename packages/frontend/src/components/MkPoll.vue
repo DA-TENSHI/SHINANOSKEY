@@ -117,7 +117,6 @@ const vote = async (id) => {
 	// border: solid 0.5px var(--MI_THEME-divider);
 	background: var(--MI_THEME-accentedBg);
 	border-radius: 4px;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	cursor: pointer;
 }

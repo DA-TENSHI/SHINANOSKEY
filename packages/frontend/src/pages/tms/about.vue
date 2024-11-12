@@ -10,7 +10,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<MkSpacer :contentMax="600" :marginMin="20">
 			<div class="_gaps_m">
 				<TmsNoCache><TmsSoftwareBanner/></TmsNoCache>
-				<div style="text-align: center;">{{ i18n.ts._tms._about.description }}</div>
+				<div style="text-align: center;">{{ i18n.ts._tms._about.taiymeIsOSS }}</div>
 				<FormSection>
 					<div class="_gaps_s">
 						<TmsSoftwareRepository/>
@@ -61,7 +61,7 @@ import TmsSoftwareDonation from '@/components/TmsSoftwareDonation.vue';
 import TmsSoftwareRepository from '@/components/TmsSoftwareRepository.vue';
 
 definePageMetadata(() => ({
-	title: i18n.ts._tms._about.title,
+	title: i18n.ts._tms.aboutTaiyme,
 	icon: 'ti ti-info-circle',
 }));
 </script>

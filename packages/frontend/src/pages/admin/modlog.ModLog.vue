@@ -201,7 +201,6 @@ const props = defineProps<{
 	background: #fff;
 	color: #000;
 	border-radius: 6px;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 }
 

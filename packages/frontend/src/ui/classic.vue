@@ -255,7 +255,6 @@ onMounted(() => {
 			border-left: solid 1px var(--MI_THEME-divider);
 			border-right: solid 1px var(--MI_THEME-divider);
 			border-radius: 0;
-			overflow: hidden; // fallback (overflow: clip)
 			overflow: clip;
 			--MI-margin: 12px;
 		}

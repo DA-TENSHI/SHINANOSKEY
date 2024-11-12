@@ -129,7 +129,6 @@ onMounted(() => {
 .root {
 	position: absolute;
 	width: 300px;
-	overflow: hidden; // fallback (overflow: clip)
 	overflow: clip;
 	transform-origin: center top;
 }
