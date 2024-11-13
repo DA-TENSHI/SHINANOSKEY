@@ -508,49 +508,6 @@ const {
 	});
 </script>
 
-watch(volume, (to) => {
-	if (videoEl.value) videoEl.value.volume = to;
-});
-
-watch(speed, (to) => {
-	if (videoEl.value) videoEl.value.playbackRate = to;
-});
-
-watch(loop, (to) => {
-	if (videoEl.value) videoEl.value.loop = to;
-});
-
-watch(hideRef, (to) => {
-	if (to && isFullscreen.value) {
-		document.exitFullscreen();
-		isFullscreen.value = false;
-	}
-});
-
-onMounted(() => {
-	init();
-});
-
-onActivated(() => {
-	init();
-});
-
-onDeactivated(() => {
-	isReady.value = false;
-	isPlaying.value = false;
-	isActuallyPlaying.value = false;
-	elapsedTimeMs.value = 0;
-	durationMs.value = 0;
-	bufferedEnd.value = 0;
-	stopVideoElWatch();
-	onceInit = false;
-	if (mediaTickFrameId) {
-		window.cancelAnimationFrame(mediaTickFrameId);
-		mediaTickFrameId = null;
-	}
-});
-</script>
-
 <style lang="scss" module>
 .cq {
 	container: mediaVideo / inline-size;
