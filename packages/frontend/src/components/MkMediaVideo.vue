@@ -506,7 +506,7 @@ const {
 			mediaTickFrameId = null;
 		}
 	});
-}
+</script>
 
 watch(volume, (to) => {
 	if (videoEl.value) videoEl.value.volume = to;
