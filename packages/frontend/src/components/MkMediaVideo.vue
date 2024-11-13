@@ -807,4 +807,5 @@ const {
 			--mediaVideo-scale: 0.60;
 		}
 	}
-	</style>
+}
+</style>
