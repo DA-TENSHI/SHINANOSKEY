@@ -158,7 +158,7 @@ import type { MenuItem } from '@/types/menu.js';
 import { i18n } from '@/i18n.js';
 import { confirm, popupMenu } from '@/os.js';
 import { defaultStore } from '@/store.js';
-import { isFullscreenNotSupported } from '@/scripts/device-kind.js';
+import { exitFullscreen, requestFullscreen } from '@/scripts/fullscreen.js';
 import { type Keymap } from '@/scripts/hotkey.js';
 import hasAudio from '@/scripts/media-has-audio.js';
 import { getMediaMenu } from '@/scripts/tms/get-media-menu.js';
@@ -360,26 +360,21 @@ function togglePlayPause() {
 }
 
 function toggleFullscreen() {
-	if (isFullscreenNotSupported && videoEl.value) {
-		if (isFullscreen.value) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			//@ts-ignore
-			videoEl.value.webkitExitFullscreen();
-			isFullscreen.value = false;
-		} else {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			//@ts-ignore
-			videoEl.value.webkitEnterFullscreen();
-			isFullscreen.value = true;
-		}
-	} else if (playerEl.value) {
-		if (isFullscreen.value) {
-			document.exitFullscreen();
-			isFullscreen.value = false;
-		} else {
-			playerEl.value.requestFullscreen({ navigationUI: 'hide' });
-			isFullscreen.value = true;
-		}
+	if (playerEl.value == null || videoEl.value == null) return;
+	if (isFullscreen.value) {
+		exitFullscreen({
+			videoEl: videoEl.value,
+		});
+		isFullscreen.value = false;
+	} else {
+		requestFullscreen({
+			videoEl: videoEl.value,
+			playerEl: playerEl.value,
+			options: {
+				navigationUI: 'hide',
+			},
+		});
+		isFullscreen.value = true;
 	}
 }
 
@@ -480,8 +475,10 @@ watch(loop, (to) => {
 });
 
 watch(hideRef, (to) => {
-	if (to && isFullscreen.value) {
-		document.exitFullscreen();
+	if (videoEl.value && to && isFullscreen.value) {
+		exitFullscreen({
+			videoEl: videoEl.value,
+		});
 		isFullscreen.value = false;
 	}
 });

@@ -39,7 +39,7 @@ const props = defineProps<{
 	items: MenuItem[];
 	align?: 'center' | string;
 	width?: number;
-	src?: any;
+	src?: HTMLElement | null;
 	returnFocusTo?: HTMLElement | null;
 }>();
 

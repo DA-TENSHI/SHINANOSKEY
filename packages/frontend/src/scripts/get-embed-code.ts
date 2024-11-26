@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: syuilo and misskey-project
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 import { defineAsyncComponent } from 'vue';
 import { v4 as uuid } from 'uuid';
 import { url } from '@@/js/config.js';
