@@ -180,7 +180,7 @@ window.fetch(`/url?url=${encodeURIComponent(requestUrl.href)}&lang=${versatileLa
 		sensitive.value = info.sensitive ?? false;
 	});
 
-function adjustTweetHeight(message: any) {
+function adjustTweetHeight(message: MessageEvent) {
 	if (message.origin !== 'https://platform.twitter.com') return;
 	const embed = message.data?.['twttr.embed'];
 	if (embed?.method !== 'twttr.private.resize') return;
@@ -197,10 +197,10 @@ function openPlayer(): void {
 	});
 }
 
-(window as any).addEventListener('message', adjustTweetHeight, { passive: true });
+window.addEventListener('message', adjustTweetHeight, { passive: true });
 
 onUnmounted(() => {
-	(window as any).removeEventListener('message', adjustTweetHeight);
+	window.removeEventListener('message', adjustTweetHeight);
 });
 </script>
 
