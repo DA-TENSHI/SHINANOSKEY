@@ -21,7 +21,3 @@ definePageMetadata(() => ({
 	icon: 'ti ti-cookie',
 }));
 </script>
-
-<style lang="scss" module>
-
-</style>

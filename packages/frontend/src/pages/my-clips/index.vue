@@ -105,7 +105,3 @@ definePageMetadata(() => ({
 	icon: 'ti ti-paperclip',
 }));
 </script>
-
-<style lang="scss" module>
-
-</style>

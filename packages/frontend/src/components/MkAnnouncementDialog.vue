@@ -22,7 +22,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { onMounted, shallowRef } from 'vue';
+import { shallowRef } from 'vue';
 import * as Misskey from 'misskey-js';
 import * as os from '@/os.js';
 import { misskeyApi } from '@/scripts/misskey-api.js';
@@ -31,10 +31,9 @@ import MkButton from '@/components/MkButton.vue';
 import { i18n } from '@/i18n.js';
 import { $i, updateAccountPartial } from '@/account.js';
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	announcement: Misskey.entities.Announcement;
-}>(), {
-});
+}>();
 
 const emit = defineEmits<{
 	(ev: 'closed'): void;
@@ -74,9 +73,6 @@ function onBgClick() {
 		duration: 100,
 	});
 }
-
-onMounted(() => {
-});
 </script>
 
 <style lang="scss" module>

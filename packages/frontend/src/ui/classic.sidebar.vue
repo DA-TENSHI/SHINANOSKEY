@@ -105,7 +105,6 @@ function openAccountMenu(ev: MouseEvent) {
 watch(defaultStore.reactiveState.menuDisplay, () => {
 	calcViewState();
 });
-
 </script>
 
 <style lang="scss" scoped>

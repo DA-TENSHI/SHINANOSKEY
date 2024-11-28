@@ -38,10 +38,9 @@ import { miLocalStorage } from '@/local-storage.js';
 import { defaultStore } from '@/store.js';
 import { serverErrorImageUrl } from '@/instance.js';
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	error?: Error;
-}>(), {
-});
+}>();
 
 const loaded = ref(false);
 const serverIsDead = ref(false);

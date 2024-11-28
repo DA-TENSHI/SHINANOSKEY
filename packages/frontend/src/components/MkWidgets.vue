@@ -177,5 +177,4 @@ function onContextmenu(widget: Widget, ev: MouseEvent) {
 	}
 
 }
-
 </style>

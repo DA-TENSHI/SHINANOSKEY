@@ -26,10 +26,9 @@ import { misskeyApi } from '@/scripts/misskey-api.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { i18n } from '@/i18n.js';
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	acct: string;
-}>(), {
-});
+}>();
 
 const user = ref<null | Misskey.entities.UserDetailed>(null);
 const error = ref<any>(null);

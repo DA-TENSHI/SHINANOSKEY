@@ -67,7 +67,6 @@ function onEditClick() {
 function onDeleteClick() {
 	emit('delete', entity.value);
 }
-
 </script>
 
 <style lang="scss" module>

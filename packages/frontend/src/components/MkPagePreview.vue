@@ -172,5 +172,4 @@ const props = defineProps<{
 		}
 	}
 }
-
 </style>
