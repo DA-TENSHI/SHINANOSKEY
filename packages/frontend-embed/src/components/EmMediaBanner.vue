@@ -4,52 +4,170 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<a :href="href" target="_blank" :class="$style.root">
-	<div :class="$style.label">
-		<template v-if="media.type.startsWith('audio')"><i class="ti ti-music"></i> {{ i18n.ts.audio }}</template>
-		<template v-else><i class="ti ti-file"></i> {{ i18n.ts.file }}</template>
-	</div>
-	<div :class="$style.go">
-		<i class="ti ti-chevron-right"></i>
-	</div>
-</a>
+<div :class="$style.cq">
+	<a
+		:href="notePage(appearNote)"
+		:class="$style.root"
+		target="_blank"
+		rel="noopener"
+		tabindex="0"
+	>
+		<template v-if="mediaRef.isSensitive">
+			<div :class="['_noSelect', $style.hideInfo]">
+				<div :class="$style.hideInfoItem">
+					<div :class="$style.hideInfoTitle">
+						<i class="ti ti-eye-exclamation"></i> {{ i18n.ts._tms.sensitiveFile }}
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<div v-else :class="$style.labelContainer">
+			<div>
+				<i class="ti ti-file" style="font-size: 1.2em;"></i>
+			</div>
+			<div :class="$style.labelText">{{ mediaRef.name }}</div>
+			<div style="margin-left: auto;">
+				<i class="ti ti-chevron-right"></i>
+			</div>
+		</div>
+	</a>
+</div>
 </template>
 
 <script lang="ts" setup>
-import * as Misskey from 'misskey-js';
+import { computed, inject } from 'vue';
+import type * as Misskey from 'misskey-js';
 import { i18n } from '@/i18n.js';
+import { DI } from '@/di.js';
+import { notePage } from '@/utils.js';
 
-defineProps<{
+const appearNote = inject(DI.appearNote)!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+
+const props = defineProps<{
 	media: Misskey.entities.DriveFile;
-	href: string;
 }>();
+
+const mediaRef = computed(() => props.media);
 </script>
 
 <style lang="scss" module>
+.cq {
+	container: mediaBanner / inline-size;
+}
+
 .root {
+	--mediaBanner-scale: 1;
 	box-sizing: border-box;
-	display: flex;
-	align-items: center;
+	position: relative;
+	display: block;
 	width: 100%;
-	padding: var(--MI-margin);
-	margin-top: 4px;
-	border: 1px solid var(--MI_THEME-inputBorder);
-	border-radius: var(--MI-radius);
-	background-color: var(--MI_THEME-panel);
-	transition: background-color .1s, border-color .1s;
+	height: 100%;
+	overflow: clip;
+	border: 0.5px solid var(--MI_THEME-divider);
+	border-radius: var(--mediaList-radius, 8px);
+	transition: background-color 0.1s ease;
+
+	&:focus-visible {
+		outline: none;
+	}
 
 	&:hover {
 		text-decoration: none;
-		border-color: var(--MI_THEME-inputBorderHover);
-		background-color: var(--MI_THEME-buttonHoverBg);
+		color: var(--MI_THEME-accent);
+		background-color: var(--MI_THEME-accentedBg);
 	}
 }
 
-.label {
-	font-size: .9em;
+.hideInfo {
+	padding: 12px 0;
+	display: flex;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #777;
+	cursor: pointer;
+
+	> .hideInfoItem {
+		max-width: 100%;
+	}
 }
 
-.go {
-	margin-left: auto;
+%HideInfoText {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-size: clamp(6px, calc(12px * var(--mediaBanner-scale)), 12px);
+	color: #fff;
+}
+
+.hideInfoTitle {
+	@extend %HideInfoText;
+	font-weight: 700;
+}
+
+.hideInfoText {
+	@extend %HideInfoText;
+}
+
+.labelContainer {
+	flex-grow: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px;
+	overflow: clip;
+}
+
+.labelText {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-size: 0.9em;
+	font-weight: 700;
+}
+
+@container mediaBanner (max-width: 250px) {
+	.root {
+		--mediaBanner-scale: 0.90;
+	}
+}
+
+@container mediaBanner (max-width: 200px) {
+	.root {
+		--mediaBanner-scale: 0.85;
+	}
+}
+
+@container mediaBanner (max-width: 150px) {
+	.root {
+		--mediaBanner-scale: 0.80;
+	}
+}
+
+@container mediaBanner (max-width: 130px) {
+	.root {
+		--mediaBanner-scale: 0.75;
+	}
+}
+
+@container mediaBanner (max-width: 120px) {
+	.root {
+		--mediaBanner-scale: 0.70;
+	}
+}
+
+@container mediaBanner (max-width: 110px) {
+	.root {
+		--mediaBanner-scale: 0.65;
+	}
+}
+
+@container mediaBanner (max-width: 100px) {
+	.root {
+		--mediaBanner-scale: 0.60;
+	}
 }
 </style>

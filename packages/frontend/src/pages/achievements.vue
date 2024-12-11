@@ -53,7 +53,3 @@ definePageMetadata(() => ({
 	icon: 'ti ti-medal',
 }));
 </script>
-
-<style lang="scss" module>
-
-</style>

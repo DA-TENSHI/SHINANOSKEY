@@ -19,10 +19,9 @@ import * as Misskey from 'misskey-js';
 import MkGalleryPostPreview from '@/components/MkGalleryPostPreview.vue';
 import MkPagination from '@/components/MkPagination.vue';
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	user: Misskey.entities.User;
-}>(), {
-});
+}>();
 
 const pagination = {
 	endpoint: 'users/gallery/posts' as const,

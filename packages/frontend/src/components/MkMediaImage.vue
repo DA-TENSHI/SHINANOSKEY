@@ -87,42 +87,42 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</button>
 				</div>
 
-				<div :class="$style.controlsLowerLeft">
-					<button
-						v-if="imageRef.comment"
-						v-tooltip:dialog="imageRef.comment"
-						:class="['_button', $style.controlItem]"
-						tabindex="-1"
-						@click.stop="() => {}"
-					>
-						<div :class="$style.controlButton"><span>ALT</span></div>
-					</button>
-				</div>
+			<div :class="$style.controlsLowerLeft">
+				<button
+					v-if="imageRef.comment"
+					v-tooltip:dialog="imageRef.comment"
+					:class="['_button', $style.controlItem]"
+					tabindex="-1"
+					@click.stop="() => {}"
+				>
+					<div :class="$style.controlButton"><span data-testid="alt">ALT</span></div>
+				</button>
+			</div>
 
-				<div :class="$style.controlsUpperLeft">
-					<button
-						v-if="['image/gif', 'image/apng'].includes(imageRef.type)"
-						v-tooltip:dialog="i18n.ts._tms.displayingGifFiles"
-						:class="['_button', $style.controlItem]"
-						tabindex="-1"
-						@click.stop="() => {}"
-					>
-						<div :class="$style.controlButton"><span>GIF</span></div>
-					</button>
-					<button
-						v-if="imageRef.isSensitive"
-						v-tooltip:dialog="i18n.ts._tms.displayingSensitiveFiles"
-						:class="['_button', $style.controlItem]"
-						tabindex="-1"
-						@click.stop="() => {}"
-					>
-						<div :class="$style.controlButton"><span>NSFW</span></div>
-					</button>
-				</div>
-			</template>
-		</div>
+			<div :class="$style.controlsUpperLeft">
+				<button
+					v-if="['image/gif', 'image/apng'].includes(imageRef.type)"
+					v-tooltip:dialog="i18n.ts._tms.displayingGifFiles"
+					:class="['_button', $style.controlItem]"
+					tabindex="-1"
+					@click.stop="() => {}"
+				>
+					<div :class="$style.controlButton"><span data-testid="gif">GIF</span></div>
+				</button>
+				<button
+					v-if="imageRef.isSensitive"
+					v-tooltip:dialog="i18n.ts._tms.displayingSensitiveFiles"
+					:class="['_button', $style.controlItem]"
+					tabindex="-1"
+					@click.stop="() => {}"
+				>
+					<div :class="$style.controlButton"><span data-testid="nsfw">NSFW</span></div>
+				</button>
+			</div>
+		</template>
 	</div>
-	</template>
+</div>
+</template>
 
 	<script lang="ts" setup>
 	import { computed, inject } from 'vue';
@@ -167,17 +167,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 		return imageRef.value.thumbnailUrl;
 	});
 
-	const showImage = async () => {
-		if (!props.controls || !hideRef.value) return;
-		if (sensitiveRef.value && defaultStore.state.confirmWhenRevealingSensitiveMedia) {
-			const { canceled } = await confirm({
-				type: 'question',
-				text: i18n.ts.sensitiveMediaRevealConfirm,
-			});
-			if (canceled) return;
-		}
-		hideRef.value = false;
-	};
+const showImage = async (ev: MouseEvent) => {
+	if (!props.controls || !hideRef.value) return;
+	if (sensitiveRef.value && defaultStore.state.confirmWhenRevealingSensitiveMedia) {
+		ev.stopPropagation();
+		const { canceled } = await confirm({
+			type: 'question',
+			text: i18n.ts.sensitiveMediaRevealConfirm,
+		});
+		if (canceled) return;
+	}
+	hideRef.value = false;
+};
 
 	const showImageMenu = (ev: MouseEvent) => {
 		popupMenu(getMediaMenu({

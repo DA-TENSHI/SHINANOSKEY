@@ -28,12 +28,11 @@ import { popup } from '@/os.js';
 import { isEnabledUrlPreview } from '@/instance.js';
 import MkA, { type MkABehavior } from '@/components/global/MkA.vue';
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	url: string;
 	rel?: null | string;
 	navigationBehavior?: MkABehavior;
-}>(), {
-});
+}>();
 
 const self = props.url.startsWith(local);
 const attr = self ? 'to' : 'href';

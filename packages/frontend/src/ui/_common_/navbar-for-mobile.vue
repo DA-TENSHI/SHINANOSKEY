@@ -14,9 +14,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<MkA :class="$style.item" :activeClass="$style.active" to="/" exact>
 			<i :class="$style.itemIcon" class="ti ti-home ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.timeline }}</span>
 		</MkA>
-		<template v-for="item in menu">
+		<template v-for="item in menu" :key="item">
 			<div v-if="item === '-'" :class="$style.divider"></div>
-			<component :is="navbarItemDef[item].to ? 'MkA' : 'button'" v-else-if="navbarItemDef[item] && (navbarItemDef[item].show !== false)" class="_button" :class="[$style.item, { [$style.active]: navbarItemDef[item].active }]" :activeClass="$style.active" :to="navbarItemDef[item].to" v-on="navbarItemDef[item].action ? { click: navbarItemDef[item].action } : {}">
+			<component
+				:is="navbarItemDef[item].to ? 'MkA' : 'button'"
+				v-else-if="navbarItemDef[item] && (navbarItemDef[item].show !== false)"
+				v-tooltip.noDelay.right="navbarItemDef[item].title"
+				class="_button"
+				:class="[$style.item, { [$style.active]: navbarItemDef[item].active }]"
+				:activeClass="$style.active"
+				v-bind="navbarItemDef[item].to ? { to: navbarItemDef[item].to } : {}"
+				v-on="navbarItemDef[item].action ? { click: navbarItemDef[item].action } : {}"
+			>
 				<i class="ti-fw" :class="[$style.itemIcon, navbarItemDef[item].icon]"></i><span :class="$style.itemText">{{ navbarItemDef[item].title }}</span>
 				<span v-if="navbarItemDef[item].indicated" :class="$style.itemIndicator" class="_blink">
 					<span v-if="navbarItemDef[item].indicateValue" class="_indicateCounter" :class="$style.itemIndicateValueIcon">{{ navbarItemDef[item].indicateValue }}</span>
@@ -25,7 +34,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</component>
 		</template>
 		<div :class="$style.divider"></div>
-		<MkA v-if="$i.isAdmin || $i.isModerator" :class="$style.item" :activeClass="$style.active" to="/admin">
+		<MkA v-if="$i?.isAdmin || $i?.isModerator" :class="$style.item" :activeClass="$style.active" to="/admin">
 			<i :class="$style.itemIcon" class="ti ti-dashboard ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.controlPanel }}</span>
 		</MkA>
 		<button :class="$style.item" class="_button" @click="more">
@@ -40,7 +49,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</MkA>
 	</div>
 	<div :class="$style.bottom">
-		<button class="_button" :class="$style.post" data-cy-open-post-form @click="os.post">
+		<button class="_button" :class="$style.post" data-cy-open-post-form @click="() => os.post()">
 			<i :class="$style.postIcon" class="ti ti-pencil ti-fw"></i><span style="position: relative;">{{ i18n.ts.note }}</span>
 		</button>
 		<div :class="$style.accountButton">
@@ -51,7 +60,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, toRef } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 import * as os from '@/os.js';
 import { navbarItemDef } from '@/navbar.js';
 import { $i } from '@/account.js';
@@ -60,7 +69,7 @@ import { i18n } from '@/i18n.js';
 import TmsAccountButton from '@/components/TmsAccountButton.vue';
 import TmsServerLogo from '@/components/TmsServerLogo.vue';
 
-const menu = toRef(defaultStore.state, 'menu');
+const menu = computed(() => defaultStore.reactiveState.menu.value);
 const otherMenuItemIndicated = computed(() => {
 	for (const def in navbarItemDef) {
 		if (menu.value.includes(def)) continue;
@@ -70,7 +79,8 @@ const otherMenuItemIndicated = computed(() => {
 });
 
 function more() {
-	const { dispose } = os.popup(defineAsyncComponent(() => import('@/components/MkLaunchPad.vue')), {}, {
+	const { dispose } = os.popup(defineAsyncComponent(() => import('@/components/MkLaunchPad.vue')), {
+	}, {
 		closed: () => dispose(),
 	});
 }

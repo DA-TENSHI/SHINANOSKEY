@@ -124,7 +124,7 @@ export function openInstanceMenu(ev: MouseEvent) {
 		});
 	}
 
-	if (!instance.impressumUrl && !instance.tosUrl && !instance.privacyPolicyUrl) {
+	if (!instance.impressumUrl || !instance.tosUrl || !instance.privacyPolicyUrl) {
 		menuItems.push({ type: 'divider' });
 	}
 

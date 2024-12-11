@@ -60,7 +60,6 @@ function selectButton(ev: MouseEvent) {
 		fileUrl.value = file.url;
 	});
 }
-
 </script>
 
 <style lang="scss" module>

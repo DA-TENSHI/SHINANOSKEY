@@ -22,7 +22,7 @@ import MkRippleEffect from '@/components/MkRippleEffect.vue';
 import { isSupportShare } from '@/scripts/navigator.js';
 import { genEmbedCode } from '@/scripts/get-embed-code.js';
 import { parseErrorMessage } from '@/scripts/tms/error.js';
-import { getAppearNote } from '@/scripts/tms/get-appear-note.js';
+import { getAppearNote } from '@/scripts/get-appear-note.js';
 import { tooltipFromElement } from '@/scripts/tms/tooltip-from-element.js';
 import { smallerVisibility } from '@/scripts/tms/visibility.js';
 

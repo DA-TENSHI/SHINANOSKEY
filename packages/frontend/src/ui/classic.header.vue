@@ -93,7 +93,6 @@ onMounted(() => {
 		settingsWindowed.value = (window.innerWidth >= WINDOW_THRESHOLD);
 	}, { passive: true });
 });
-
 </script>
 
 <style lang="scss" scoped>

@@ -55,6 +55,10 @@ services:
         target: /misskey/packages/misskey-js/package.json
         read_only: true
       - type: bind
+        source: ../../../patches
+        target: /misskey/patches
+        read_only: true
+      - type: bind
         source: ../../../package.json
         target: /misskey/package.json
         read_only: true
@@ -97,6 +101,10 @@ services:
       - type: bind
         source: ./tsconfig.json
         target: /misskey/packages/backend/test-federation/tsconfig.json
+        read_only: true
+      - type: bind
+        source: ../../../patches
+        target: /misskey/patches
         read_only: true
       - type: bind
         source: ../../../package.json

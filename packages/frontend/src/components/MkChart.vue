@@ -845,7 +845,6 @@ watch(() => [props.src, props.span], fetchAndRender);
 onMounted(() => {
 	fetchAndRender();
 });
-
 </script>
 
 <style lang="scss" module>

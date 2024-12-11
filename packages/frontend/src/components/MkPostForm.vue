@@ -99,66 +99,54 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</div>
 	</template>
 
-	<script lang="ts" setup>
-	import { toASCII } from 'punycode';
-	import { inject, watch, nextTick, onMounted, defineAsyncComponent, provide, shallowRef, ref, computed } from 'vue';
-	import * as mfm from 'mfm-js';
-	import * as Misskey from 'misskey-js';
-	import insertTextAtCursor from 'insert-text-at-cursor';
-	import { host, url } from '@@/js/config.js';
-	import MkNoteSimple from '@/components/MkNoteSimple.vue';
-	import MkNotePreview from '@/components/MkNotePreview.vue';
-	import XPostFormAttaches from '@/components/MkPostFormAttaches.vue';
-	import MkPollEditor, { type PollEditorModelValue } from '@/components/MkPollEditor.vue';
-	import { erase, unique } from '@/scripts/array.js';
-	import { extractMentions } from '@/scripts/extract-mentions.js';
-	import { formatTimeString } from '@/scripts/format-time-string.js';
-	import { Autocomplete } from '@/scripts/autocomplete.js';
-	import * as os from '@/os.js';
-	import { misskeyApi } from '@/scripts/misskey-api.js';
-	import { selectFiles } from '@/scripts/select-file.js';
-	import { defaultStore, notePostInterruptors, postFormActions } from '@/store.js';
-	import MkInfo from '@/components/MkInfo.vue';
-	import { i18n } from '@/i18n.js';
-	import { instance } from '@/instance.js';
-	import { signinRequired, notesCount, incNotesCount, getAccounts, openAccountMenu as openAccountMenu_ } from '@/account.js';
-	import { uploadFile } from '@/scripts/upload.js';
-	import { deepClone } from '@/scripts/clone.js';
-	import MkRippleEffect from '@/components/MkRippleEffect.vue';
-	import { miLocalStorage } from '@/local-storage.js';
-	import { claimAchievement } from '@/scripts/achievements.js';
-	import { emojiPicker } from '@/scripts/emoji-picker.js';
-	import { mfmFunctionPicker } from '@/scripts/mfm-function-picker.js';
-	import { filterKeyboardNonComposing } from '@/scripts/tms/filter-keyboard.js';
+<script lang="ts" setup>
+import { toASCII } from 'punycode';
+import { inject, watch, nextTick, onMounted, defineAsyncComponent, provide, shallowRef, ref, computed } from 'vue';
+import * as mfm from 'mfm-js';
+import * as Misskey from 'misskey-js';
+import insertTextAtCursor from 'insert-text-at-cursor';
+import { host, url } from '@@/js/config.js';
+import type { PostFormProps } from '@/types/post-form.js';
+import MkNoteSimple from '@/components/MkNoteSimple.vue';
+import MkNotePreview from '@/components/MkNotePreview.vue';
+import XPostFormAttaches from '@/components/MkPostFormAttaches.vue';
+import MkPollEditor, { type PollEditorModelValue } from '@/components/MkPollEditor.vue';
+import { erase, unique } from '@/scripts/array.js';
+import { extractMentions } from '@/scripts/extract-mentions.js';
+import { formatTimeString } from '@/scripts/format-time-string.js';
+import { Autocomplete } from '@/scripts/autocomplete.js';
+import * as os from '@/os.js';
+import { misskeyApi } from '@/scripts/misskey-api.js';
+import { selectFiles } from '@/scripts/select-file.js';
+import { defaultStore, notePostInterruptors, postFormActions } from '@/store.js';
+import MkInfo from '@/components/MkInfo.vue';
+import { i18n } from '@/i18n.js';
+import { instance } from '@/instance.js';
+import { signinRequired, notesCount, incNotesCount, getAccounts, openAccountMenu as openAccountMenu_ } from '@/account.js';
+import { uploadFile } from '@/scripts/upload.js';
+import { deepClone } from '@/scripts/clone.js';
+import MkRippleEffect from '@/components/MkRippleEffect.vue';
+import { miLocalStorage } from '@/local-storage.js';
+import { claimAchievement } from '@/scripts/achievements.js';
+import { emojiPicker } from '@/scripts/emoji-picker.js';
+import { mfmFunctionPicker } from '@/scripts/mfm-function-picker.js';
+import { filterKeyboardNonComposing } from '@/scripts/tms/filter-keyboard.js';
 
 	const $i = signinRequired();
 
 	const modal = inject<boolean>('modal', false);
 
-	const props = withDefaults(defineProps<{
-		reply?: Misskey.entities.Note;
-		renote?: Misskey.entities.Note;
-		channel?: Misskey.entities.Channel; // TODO
-		mention?: Misskey.entities.User;
-		specified?: Misskey.entities.UserDetailed;
-		initialText?: string;
-		initialCw?: string;
-		initialVisibility?: (typeof Misskey.noteVisibilities)[number];
-		initialFiles?: Misskey.entities.DriveFile[];
-		initialLocalOnly?: boolean;
-		initialVisibleUsers?: Misskey.entities.UserDetailed[];
-		initialNote?: Misskey.entities.Note;
-		instant?: boolean;
-		fixed?: boolean;
-		autofocus?: boolean;
-		freezeAfterPosted?: boolean;
-		mock?: boolean;
-	}>(), {
-		initialVisibleUsers: () => [],
-		autofocus: true,
-		mock: false,
-		initialLocalOnly: undefined,
-	});
+const props = withDefaults(defineProps<PostFormProps & {
+	fixed?: boolean;
+	autofocus?: boolean;
+	freezeAfterPosted?: boolean;
+	mock?: boolean;
+}>(), {
+	initialVisibleUsers: () => [],
+	autofocus: true,
+	mock: false,
+	initialLocalOnly: undefined,
+});
 
 	provide('mock', props.mock);
 
@@ -957,22 +945,22 @@ SPDX-License-Identifier: AGPL-3.0-only
 		);
 	}
 
-	function showActions(ev: MouseEvent) {
-		if (props.mock) return;
-		os.popupMenu(postFormActions.map(action => ({
-			text: action.title,
-			action: () => {
-				action.handler({
-					text: text.value,
-					cw: cw.value,
-				}, (key, value: any) => {
-					if (typeof key !== 'string') return;
-					if (key === 'text') { text.value = value; }
-					if (key === 'cw') { useCw.value = value !== null; cw.value = value; }
-				});
-			},
-		})), ev.currentTarget ?? ev.target);
-	}
+function showActions(ev: MouseEvent) {
+	if (props.mock) return;
+	os.popupMenu(postFormActions.map(action => ({
+		text: action.title,
+		action: () => {
+			action.handler({
+				text: text.value,
+				cw: cw.value,
+			}, (key, value) => {
+				if (typeof key !== 'string' || typeof value !== 'string') return;
+				if (key === 'text') { text.value = value; }
+				if (key === 'cw') { useCw.value = value !== null; cw.value = value; }
+			});
+		},
+	})), ev.currentTarget ?? ev.target);
+}
 
 	const postAccount = ref<Misskey.entities.UserDetailed | null>(null);
 

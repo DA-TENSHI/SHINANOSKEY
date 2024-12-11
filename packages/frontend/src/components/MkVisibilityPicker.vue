@@ -49,14 +49,13 @@ import { i18n } from '@/i18n.js';
 
 const modal = shallowRef<InstanceType<typeof MkModal>>();
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	currentVisibility: typeof Misskey.noteVisibilities[number];
 	isSilenced: boolean;
 	localOnly: boolean;
 	src?: HTMLElement;
 	isReplyVisibilitySpecified?: boolean;
-}>(), {
-});
+}>();
 
 const emit = defineEmits<{
 	(ev: 'changeVisibility', v: typeof Misskey.noteVisibilities[number]): void;

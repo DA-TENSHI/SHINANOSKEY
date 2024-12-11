@@ -64,7 +64,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<span v-if="appearNote.channel" style="margin-left: 0.5em;" :title="appearNote.channel.name"><i class="ti ti-device-tv"></i></span>
 					</div>
 				</div>
-				<div :class="$style.noteHeaderUsername"><MkAcct :user="appearNote.user"/></div>
+				<div :class="$style.noteHeaderUsernameAndBadgeRoles">
+					<div :class="$style.noteHeaderUsername">
+						<MkAcct :user="appearNote.user"/>
+					</div>
+					<div v-if="appearNote.user.badgeRoles" :class="$style.noteHeaderBadgeRoles">
+						<img v-for="(role, i) in appearNote.user.badgeRoles" :key="i" v-tooltip="role.name" :class="$style.noteHeaderBadgeRole" :src="role.iconUrl!"/>
+					</div>
+				</div>
 				<TmsInstanceTicker v-if="showTicker" :instance="appearNote.user.instance" :channel="appearNote.channel" position="default"/>
 			</div>
 		</header>
@@ -204,7 +211,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { type ComputedRef, computed, inject, onMounted, provide, ref, shallowRef, watch } from 'vue';
+import { type ComputedRef, computed, inject, onMounted, provide, ref, shallowRef, useTemplateRef, watch } from 'vue';
 import * as mfm from 'mfm-js';
 import * as Misskey from 'misskey-js';
 import { isLink } from '@@/js/is-link.js';
@@ -245,12 +252,11 @@ import MkReactionIcon from '@/components/MkReactionIcon.vue';
 import MkButton from '@/components/MkButton.vue';
 import { isEnabledUrlPreview } from '@/instance.js';
 import { type Keymap } from '@/scripts/hotkey.js';
-import { getAppearNote } from '@/scripts/tms/get-appear-note.js';
-import { isQuote, isRenote } from '@/scripts/tms/is-renote.js';
+import { getAppearNote } from '@/scripts/get-appear-note.js';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;
-	initialTab: string;
+	initialTab?: string;
 }>(), {
 	initialTab: 'replies',
 });
@@ -278,7 +284,7 @@ if (noteViewInterruptors.length > 0) {
 	});
 }
 
-const isRenoted = isRenote(note.value) && !isQuote(note.value);
+const isRenoted = Misskey.note.isPureRenote(note.value);
 
 const rootEl = shallowRef<HTMLElement>();
 const menuButton = shallowRef<HTMLElement>();
@@ -286,7 +292,7 @@ const renoteButton = shallowRef<HTMLElement>();
 const renoteTime = shallowRef<HTMLElement>();
 const reactButton = shallowRef<HTMLElement>();
 const clipButton = shallowRef<HTMLElement>();
-const galleryEl = shallowRef<InstanceType<typeof MkMediaList>>();
+const galleryEl = useTemplateRef('galleryEl');
 const appearNote = computed(() => getAppearNote(note.value));
 const isMyRenote = $i && ($i.id === note.value.userId);
 const showContent = ref(false);
@@ -406,7 +412,7 @@ if (appearNote.value.reactionAcceptance === 'likeOnly') {
 }
 
 async function renote() {
-	pleaseLogin(undefined, pleaseLoginContext.value);
+	pleaseLogin({ openOnRemote: pleaseLoginContext.value });
 	showMovedDialog();
 
 	const { menu } = await getRenoteMenu({ note: note.value, renoteButton });
@@ -414,7 +420,7 @@ async function renote() {
 }
 
 function reply() {
-	pleaseLogin(undefined, pleaseLoginContext.value);
+	pleaseLogin({ openOnRemote: pleaseLoginContext.value });
 	showMovedDialog();
 	os.post({
 		reply: appearNote.value,
@@ -425,7 +431,7 @@ function reply() {
 }
 
 function react() {
-	pleaseLogin(undefined, pleaseLoginContext.value);
+	pleaseLogin({ openOnRemote: pleaseLoginContext.value });
 	showMovedDialog();
 	if (appearNote.value.reactionAcceptance === 'likeOnly') {
 		sound.playMisskeySfx('reaction');
@@ -501,7 +507,7 @@ async function clip(): Promise<void> {
 
 function showRenoteMenu() {
 	if (!isMyRenote) return;
-	pleaseLogin(undefined, pleaseLoginContext.value);
+	pleaseLogin({ openOnRemote: pleaseLoginContext.value });
 	os.popupMenu([{
 		text: i18n.ts.unrenote,
 		icon: 'ti ti-trash',
@@ -687,10 +693,28 @@ function loadConversation() {
 	float: right;
 }
 
+.noteHeaderUsernameAndBadgeRoles {
+	display: flex;
+}
+
 .noteHeaderUsername {
 	margin-bottom: 2px;
+	margin-right: 0.5em;
 	line-height: 1.3;
 	word-wrap: anywhere;
+}
+
+.noteHeaderBadgeRoles {
+	margin: 0 .5em 0 0;
+}
+
+.noteHeaderBadgeRole {
+	height: 1.3em;
+	vertical-align: -20%;
+
+	& + .noteHeaderBadgeRole {
+		margin-left: 0.2em;
+	}
 }
 
 .noteContent {

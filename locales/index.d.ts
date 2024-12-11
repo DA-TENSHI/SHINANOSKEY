@@ -1547,10 +1547,6 @@ export interface Locale extends ILocale {
      */
     readonly "registration": string;
     /**
-     * 誰でも新規登録できるようにする
-     */
-    readonly "enableRegistration": string;
-    /**
      * 招待
      */
     readonly "invite": string;
@@ -2366,6 +2362,10 @@ export interface Locale extends ILocale {
      * 詳細
      */
     readonly "details": string;
+    /**
+     * リノートの詳細
+     */
+    readonly "renoteDetails": string;
     /**
      * 絵文字を選択
      */
@@ -3807,6 +3807,18 @@ export interface Locale extends ILocale {
      */
     readonly "oneMonth": string;
     /**
+     * 3ヶ月
+     */
+    readonly "threeMonths": string;
+    /**
+     * 1年
+     */
+    readonly "oneYear": string;
+    /**
+     * 3日
+     */
+    readonly "threeDays": string;
+    /**
      * 反映されるまで時間がかかる場合があります。
      */
     readonly "reflectMayTakeTime": string;
@@ -4382,6 +4394,10 @@ export interface Locale extends ILocale {
      * リアクションの最大横幅を制限し、縮小して表示する
      */
     readonly "limitWidthOfReaction": string;
+    /**
+     * リアクションの背景を表示する
+     */
+    readonly "hideReactionBackground": string;
     /**
      * ノートIDまたはURL
      */
@@ -5194,6 +5210,72 @@ export interface Locale extends ILocale {
      * 名前に禁止されている文字列が含まれています。この名前を使用したい場合は、サーバー管理者にお問い合わせください。
      */
     readonly "yourNameContainsProhibitedWordsDescription": string;
+    /**
+     * 投稿者により、表示にはログインが必要と設定されています
+     */
+    readonly "thisContentsAreMarkedAsSigninRequiredByAuthor": string;
+    /**
+     * ロックダウン
+     */
+    readonly "lockdown": string;
+    /**
+     * アカウントを選択してください
+     */
+    readonly "pleaseSelectAccount": string;
+    /**
+     * 利用可能なロール
+     */
+    readonly "availableRoles": string;
+    /**
+     * 注意事項を理解した上でオンにします。
+     */
+    readonly "acknowledgeNotesAndEnable": string;
+    readonly "_accountSettings": {
+        /**
+         * コンテンツの表示にログインを必須にする
+         */
+        readonly "requireSigninToViewContents": string;
+        /**
+         * あなたが作成した全てのノートなどのコンテンツを表示するのにログインを必須にします。クローラーに情報が収集されるのを防ぐ効果が期待できます。
+         */
+        readonly "requireSigninToViewContentsDescription1": string;
+        /**
+         * URLプレビュー(OGP)、Webページへの埋め込み、ノートの引用に対応していないサーバーからの表示も不可になります。
+         */
+        readonly "requireSigninToViewContentsDescription2": string;
+        /**
+         * リモートサーバーに連合されたコンテンツでは、これらの制限が適用されない場合があります。
+         */
+        readonly "requireSigninToViewContentsDescription3": string;
+        /**
+         * 過去のノートをフォロワーのみ表示可能にする
+         */
+        readonly "makeNotesFollowersOnlyBefore": string;
+        /**
+         * この機能が有効になっている間、設定された日時より過去、または設定された時間を経過しているノートがフォロワーのみ表示可能になります。無効に戻すと、ノートの公開状態も元に戻ります。
+         */
+        readonly "makeNotesFollowersOnlyBeforeDescription": string;
+        /**
+         * 過去のノートを非公開化する
+         */
+        readonly "makeNotesHiddenBefore": string;
+        /**
+         * この機能が有効になっている間、設定された日時より過去、または設定された時間を経過しているノートが自分のみ表示可能(非公開化)になります。無効に戻すと、ノートの公開状態も元に戻ります。
+         */
+        readonly "makeNotesHiddenBeforeDescription": string;
+        /**
+         * リモートサーバーに連合されたノートには効果が及ばない場合があります。
+         */
+        readonly "mayNotEffectForFederatedNotes": string;
+        /**
+         * 指定した時間を経過しているノート
+         */
+        readonly "notesHavePassedSpecifiedPeriod": string;
+        /**
+         * 指定した日時より前のノート
+         */
+        readonly "notesOlderThanSpecifiedDateAndTime": string;
+    };
     readonly "_abuseUserReport": {
         /**
          * 転送
@@ -5740,6 +5822,14 @@ export interface Locale extends ILocale {
          * サーバー運営者へのお問い合わせフォームのURLや、運営者の連絡先等が記載されたWebページのURLを指定します。
          */
         readonly "inquiryUrlDescription": string;
+        /**
+         * アカウントの作成をオープンにする
+         */
+        readonly "openRegistration": string;
+        /**
+         * 登録を開放することはリスクが伴います。サーバーを常に監視し、トラブルが発生した際にすぐに対応できる体制がある場合のみオンにすることを推奨します。
+         */
+        readonly "openRegistrationWarning": string;
         /**
          * 一定期間モデレーターのアクティビティが検出されなかった場合、スパム防止のためこの設定は自動でオフになります。
          */
@@ -8407,13 +8497,25 @@ export interface Locale extends ILocale {
          */
         readonly "callback": string;
         /**
+         * アクセスを許可しました
+         */
+        readonly "accepted": string;
+        /**
          * アクセスを拒否しました
          */
         readonly "denied": string;
         /**
+         * 以下のユーザーとして操作しています
+         */
+        readonly "scopeUser": string;
+        /**
          * アプリケーションにアクセス許可を与えるには、ログインが必要です。
          */
         readonly "pleaseLogin": string;
+        /**
+         * アクセスを許可すると、自動で以下のURLに遷移します
+         */
+        readonly "byClickingYouWillBeRedirectedToThisUrl": string;
     };
     readonly "_antennaSources": {
         /**
@@ -9303,7 +9405,7 @@ export interface Locale extends ILocale {
          */
         readonly "youGotQuote": ParameterizedString<"name">;
         /**
-         * {name}がRenoteしました
+         * {name}がリノートしました
          */
         readonly "youRenoted": ParameterizedString<"name">;
         /**
@@ -9408,7 +9510,7 @@ export interface Locale extends ILocale {
              */
             readonly "reply": string;
             /**
-             * Renote
+             * リノート
              */
             readonly "renote": string;
             /**
@@ -9466,7 +9568,7 @@ export interface Locale extends ILocale {
              */
             readonly "reply": string;
             /**
-             * Renote
+             * リノート
              */
             readonly "renote": string;
         };
@@ -10502,6 +10604,38 @@ export interface Locale extends ILocale {
          * 生成されたコードをウェブサイトに貼り付けてご利用ください。
          */
         readonly "codeGeneratedDescription": string;
+    };
+    readonly "_selfXssPrevention": {
+        /**
+         * 警告
+         */
+        readonly "warning": string;
+        /**
+         * 「この画面に何か貼り付けろ」はすべて詐欺です。
+         */
+        readonly "title": string;
+        /**
+         * ここに何かを貼り付けると、悪意のあるユーザーにアカウントを乗っ取られたり、個人情報を盗まれたりする可能性があります。
+         */
+        readonly "description1": string;
+        /**
+         * 貼り付けようとしているものが何なのかを正確に理解していない場合は、%c今すぐ作業を中止してこのウィンドウを閉じてください。
+         */
+        readonly "description2": string;
+        /**
+         * 詳しくはこちらをご確認ください。 {link}
+         */
+        readonly "description3": ParameterizedString<"link">;
+    };
+    readonly "_followRequest": {
+        /**
+         * 受け取った申請
+         */
+        readonly "recieved": string;
+        /**
+         * 送った申請
+         */
+        readonly "sent": string;
     };
     readonly "_tms": {
         /**

@@ -147,7 +147,7 @@ const emit = defineEmits<{
 }>();
 
 const dialog = shallowRef<InstanceType<typeof MkModalWindow>>();
- 
+
 const page = ref(defaultStore.state.accountSetupWizard);
 
 watch(page, () => {

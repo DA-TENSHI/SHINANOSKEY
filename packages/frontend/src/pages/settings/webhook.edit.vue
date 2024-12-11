@@ -47,7 +47,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<MkButton transparent :class="$style.testButton" :disabled="!(active && event_renote)" @click="test('renote')"><i class="ti ti-send"></i></MkButton>
 						</div>
 						<div :class="$style.switchBox">
-							<MkSwitch v-model="event_reaction">{{ i18n.ts._webhookSettings._events.reaction }}</MkSwitch>
+							<MkSwitch v-model="event_reaction" :disabled="true">{{ i18n.ts._webhookSettings._events.reaction }}</MkSwitch>
 							<MkButton transparent :class="$style.testButton" :disabled="!(active && event_reaction)" @click="test('reaction')"><i class="ti ti-send"></i></MkButton>
 						</div>
 						<div :class="$style.switchBox">
@@ -110,7 +110,7 @@ const event_reaction = ref(webhook.on.includes('reaction'));
 const event_mention = ref(webhook.on.includes('mention'));
 
 function save() {
-	const events: Misskey.entities.UserWebhook['on'] = [];
+	const events: Misskey.entities.IWebhooksCreateRequest['on'] = [];
 	if (event_follow.value) events.push('follow');
 	if (event_followed.value) events.push('followed');
 	if (event_note.value) events.push('note');
@@ -143,7 +143,7 @@ async function del(): Promise<void> {
 	router.push('/settings/webhook');
 }
 
-async function test(type: Misskey.entities.UserWebhook['on'][number]): Promise<void> {
+async function test(type: Misskey.entities.IWebhooksCreateRequest['on'][number]): Promise<void> {
 	await os.apiWithDialog('i/webhooks/test', {
 		webhookId: props.webhookId,
 		type,
