@@ -12,7 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	@click="toggleReaction()"
 	@contextmenu.prevent.stop="menu"
 >
-	<MkReactionIcon :class="[$style.icon, { [$style.limitWidth]: defaultStore.state.limitWidthOfReaction }]" :reaction="reaction" :emojiUrl="note.reactionEmojis[reaction.substring(1, reaction.length - 1)]"/>
+	<MkReactionIcon :class="[$style.icon, { [$style.limitWidth]: defaultStore.state.limitWidthOfReaction, [$style.background]: !defaultStore.state.showReactionBackground }]" :reaction="reaction" :emojiUrl="note.reactionEmojis[reaction.substring(1, reaction.length - 1)]"/>
 	<span :class="$style.count">{{ count }}</span>
 </button>
 </template>
@@ -248,12 +248,15 @@ if (!mock) {
 	object-fit: contain;
 }
 
+.background {
+	background-color: var(--MI_THEME-panel);
+}
+
 .icon {
 	box-sizing: border-box;
 	padding: 4px;
 	height: 34px;
 	font-size: 1.5em;
-	background-color: #ffffff;
 }
 
 .count {

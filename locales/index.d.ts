@@ -4383,6 +4383,10 @@ export interface Locale extends ILocale {
      */
     readonly "limitWidthOfReaction": string;
     /**
+     * リアクションの背景を表示する
+     */
+    readonly "hideReactionBackground": string;
+    /**
      * ノートIDまたはURL
      */
     readonly "noteIdOrUrl": string;
