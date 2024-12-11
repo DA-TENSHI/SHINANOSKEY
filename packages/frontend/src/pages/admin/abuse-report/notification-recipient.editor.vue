@@ -277,7 +277,6 @@ onMounted(async () => {
 		}
 	});
 });
-
 </script>
 
 <style lang="scss" module>

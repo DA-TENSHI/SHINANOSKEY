@@ -1,0 +1,149 @@
+diff --git a/built/index.d.ts b/built/index.d.ts
+index 1a5120628f3f01d29f8928d072391ad333d3db2b..67c336cab5193cda55b7d1a1f69013fc4800b454 100644
+--- a/built/index.d.ts
++++ b/built/index.d.ts
+@@ -1,4 +1,4 @@
+ export { parse, parseSimple, toString, inspect, extract, } from './api';
+ export { NodeType, MfmNode, MfmSimpleNode, MfmBlock, MfmInline, } from './node';
+-export { MfmQuote, MfmSearch, MfmCodeBlock, MfmMathBlock, MfmCenter, MfmUnicodeEmoji, MfmEmojiCode, MfmBold, MfmSmall, MfmItalic, MfmStrike, MfmInlineCode, MfmMathInline, MfmMention, MfmHashtag, MfmUrl, MfmLink, MfmFn, MfmPlain, MfmText, } from './node';
+-export { QUOTE, SEARCH, CODE_BLOCK, MATH_BLOCK, CENTER, UNI_EMOJI, EMOJI_CODE, BOLD, SMALL, ITALIC, STRIKE, INLINE_CODE, MATH_INLINE, MENTION, HASHTAG, N_URL, LINK, FN, PLAIN, TEXT, } from './node';
++export { MfmQuote, MfmSearch, MfmCodeBlock, MfmMathBlock, MfmCenter, MfmUnicodeEmoji, MfmEmojiCode, MfmRjNumber, MfmBold, MfmSmall, MfmItalic, MfmStrike, MfmInlineCode, MfmMathInline, MfmMention, MfmHashtag, MfmUrl, MfmLink, MfmFn, MfmPlain, MfmText, } from './node';
++export { QUOTE, SEARCH, CODE_BLOCK, MATH_BLOCK, CENTER, UNI_EMOJI, EMOJI_CODE, RJ_NUMBER, BOLD, SMALL, ITALIC, STRIKE, INLINE_CODE, MATH_INLINE, MENTION, HASHTAG, N_URL, LINK, FN, PLAIN, TEXT, } from './node';
+diff --git a/built/index.js b/built/index.js
+index 9b65b88d731b20b736b22255961692afd031e9d6..8a67b491f540b04b32a153a5b74f7c43a8ab605a 100644
+--- a/built/index.js
++++ b/built/index.js
+@@ -1,6 +1,6 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+-exports.TEXT = exports.PLAIN = exports.FN = exports.LINK = exports.N_URL = exports.HASHTAG = exports.MENTION = exports.MATH_INLINE = exports.INLINE_CODE = exports.STRIKE = exports.ITALIC = exports.SMALL = exports.BOLD = exports.EMOJI_CODE = exports.UNI_EMOJI = exports.CENTER = exports.MATH_BLOCK = exports.CODE_BLOCK = exports.SEARCH = exports.QUOTE = exports.extract = exports.inspect = exports.toString = exports.parseSimple = exports.parse = void 0;
++exports.TEXT = exports.PLAIN = exports.FN = exports.LINK = exports.N_URL = exports.HASHTAG = exports.MENTION = exports.MATH_INLINE = exports.INLINE_CODE = exports.STRIKE = exports.ITALIC = exports.SMALL = exports.BOLD = exports.RJ_NUMBER = exports.EMOJI_CODE = exports.UNI_EMOJI = exports.CENTER = exports.MATH_BLOCK = exports.CODE_BLOCK = exports.SEARCH = exports.QUOTE = exports.extract = exports.inspect = exports.toString = exports.parseSimple = exports.parse = void 0;
+ var api_1 = require("./api");
+ Object.defineProperty(exports, "parse", { enumerable: true, get: function () { return api_1.parse; } });
+ Object.defineProperty(exports, "parseSimple", { enumerable: true, get: function () { return api_1.parseSimple; } });
+@@ -15,6 +15,7 @@ Object.defineProperty(exports, "MATH_BLOCK", { enumerable: true, get: function (
+ Object.defineProperty(exports, "CENTER", { enumerable: true, get: function () { return node_1.CENTER; } });
+ Object.defineProperty(exports, "UNI_EMOJI", { enumerable: true, get: function () { return node_1.UNI_EMOJI; } });
+ Object.defineProperty(exports, "EMOJI_CODE", { enumerable: true, get: function () { return node_1.EMOJI_CODE; } });
++Object.defineProperty(exports, "RJ_NUMBER", { enumerable: true, get: function () { return node_1.RJ_NUMBER; } });
+ Object.defineProperty(exports, "BOLD", { enumerable: true, get: function () { return node_1.BOLD; } });
+ Object.defineProperty(exports, "SMALL", { enumerable: true, get: function () { return node_1.SMALL; } });
+ Object.defineProperty(exports, "ITALIC", { enumerable: true, get: function () { return node_1.ITALIC; } });
+diff --git a/built/internal/parser.d.ts b/built/internal/parser.d.ts
+index 428d5dc413687f265ad4fb6ace9caf6ea27db6a2..f3f6f9c710d083a4a548c63639e4eb908164fef4 100644
+--- a/built/internal/parser.d.ts
++++ b/built/internal/parser.d.ts
+@@ -31,6 +31,8 @@ export declare const language: {
+     link: P.Parser<M.MfmLink>;
+     url: P.Parser<string | M.MfmUrl>;
+     urlAlt: P.Parser<M.MfmUrl>;
++    rjWorkNumber: P.Parser<M.MfmRjNumber>;
++    rgCircleNumber: P.Parser<M.MfmRjNumber>;
+     search: P.Parser<M.MfmSearch>;
+     text: P.Parser<string>;
+ };
+diff --git a/built/internal/parser.js b/built/internal/parser.js
+index 4714f3a6e4350ba79a5f47c33d2df1a3132e9bb6..1e5f294b41cc83ca66974df02b1da34e32fa54cd 100644
+--- a/built/internal/parser.js
++++ b/built/internal/parser.js
+@@ -86,6 +86,8 @@ exports.language = P.createLanguage({
+     full: r => {
+         return P.alt([
+             r.unicodeEmoji,
++            r.rjWorkNumber,
++            r.rgCircleNumber,
+             r.centerTag,
+             r.smallTag,
+             r.plainTag,
+@@ -124,6 +126,8 @@ exports.language = P.createLanguage({
+     inline: r => {
+         return P.alt([
+             r.unicodeEmoji,
++            r.rjWorkNumber,
++            r.rgCircleNumber,
+             r.smallTag,
+             r.plainTag,
+             r.boldTag,
+@@ -650,6 +654,26 @@ exports.language = P.createLanguage({
+             return P.success(result.index, M.N_URL(text, true));
+         });
+     },
++    rjWorkNumber: r => {
++        const workNumberChar = P.regexp(/[RVB][JE]\d{6,}/);
++        return P.seq([
++            notLinkLabel,
++            workNumberChar,
++        ], 1).map(rj => {
++            const url = `https://www.dlsite.com/home/work/=/product_id/${rj}.html`;
++            return M.RJ_NUMBER(rj, url);
++        });
++    },
++    rgCircleNumber: r => {
++        const circleNumberChar = P.regexp(/[RVB][G]\d{5,}/);
++        return P.seq([
++            notLinkLabel,
++            circleNumberChar,
++        ], 1).map(rg => {
++            const url = `https://www.dlsite.com/home/circle/profile/=/maker_id/${rg}.html`;
++            return M.RJ_NUMBER(rg, url);
++        });
++    },
+     search: r => {
+         const button = P.alt([
+             P.regexp(/\[(検索|search)\]/i),
+diff --git a/built/node.d.ts b/built/node.d.ts
+index 3c312ed33517386ba2ea696f6bfbaabbf0010d36..83f589422d67ee7e91d6eab65d919c5bd21a1e10 100644
+--- a/built/node.d.ts
++++ b/built/node.d.ts
+@@ -40,7 +40,7 @@ export type MfmCenter = {
+     children: MfmInline[];
+ };
+ export declare const CENTER: (children: MfmInline[]) => NodeType<'center'>;
+-export type MfmInline = MfmUnicodeEmoji | MfmEmojiCode | MfmBold | MfmSmall | MfmItalic | MfmStrike | MfmInlineCode | MfmMathInline | MfmMention | MfmHashtag | MfmUrl | MfmLink | MfmFn | MfmPlain | MfmText;
++export type MfmInline = MfmUnicodeEmoji | MfmEmojiCode | MfmRjNumber | MfmBold | MfmSmall | MfmItalic | MfmStrike | MfmInlineCode | MfmMathInline | MfmMention | MfmHashtag | MfmUrl | MfmLink | MfmFn | MfmPlain | MfmText;
+ export type MfmUnicodeEmoji = {
+     type: 'unicodeEmoji';
+     props: {
+@@ -57,6 +57,15 @@ export type MfmEmojiCode = {
+     children?: [];
+ };
+ export declare const EMOJI_CODE: (name: string) => NodeType<'emojiCode'>;
++export type MfmRjNumber = {
++    type: 'rjNumber';
++    props: {
++        rjNumber: string;
++        url: string;
++    };
++    children?: [];
++};
++export declare const RJ_NUMBER: (rjNumber: string, url: string) => NodeType<'rjNumber'>;
+ export type MfmBold = {
+     type: 'bold';
+     props?: Record<string, unknown>;
+@@ -156,4 +165,4 @@ export type MfmText = {
+     children?: [];
+ };
+ export declare const TEXT: (value: string) => NodeType<'text'>;
+-export type NodeType<T extends MfmNode['type']> = T extends 'quote' ? MfmQuote : T extends 'search' ? MfmSearch : T extends 'blockCode' ? MfmCodeBlock : T extends 'mathBlock' ? MfmMathBlock : T extends 'center' ? MfmCenter : T extends 'unicodeEmoji' ? MfmUnicodeEmoji : T extends 'emojiCode' ? MfmEmojiCode : T extends 'bold' ? MfmBold : T extends 'small' ? MfmSmall : T extends 'italic' ? MfmItalic : T extends 'strike' ? MfmStrike : T extends 'inlineCode' ? MfmInlineCode : T extends 'mathInline' ? MfmMathInline : T extends 'mention' ? MfmMention : T extends 'hashtag' ? MfmHashtag : T extends 'url' ? MfmUrl : T extends 'link' ? MfmLink : T extends 'fn' ? MfmFn : T extends 'plain' ? MfmPlain : T extends 'text' ? MfmText : never;
++export type NodeType<T extends MfmNode['type']> = T extends 'quote' ? MfmQuote : T extends 'search' ? MfmSearch : T extends 'blockCode' ? MfmCodeBlock : T extends 'mathBlock' ? MfmMathBlock : T extends 'center' ? MfmCenter : T extends 'unicodeEmoji' ? MfmUnicodeEmoji : T extends 'emojiCode' ? MfmEmojiCode : T extends 'rjNumber' ? MfmRjNumber : T extends 'bold' ? MfmBold : T extends 'small' ? MfmSmall : T extends 'italic' ? MfmItalic : T extends 'strike' ? MfmStrike : T extends 'inlineCode' ? MfmInlineCode : T extends 'mathInline' ? MfmMathInline : T extends 'mention' ? MfmMention : T extends 'hashtag' ? MfmHashtag : T extends 'url' ? MfmUrl : T extends 'link' ? MfmLink : T extends 'fn' ? MfmFn : T extends 'plain' ? MfmPlain : T extends 'text' ? MfmText : never;
+diff --git a/built/node.js b/built/node.js
+index a8abe24016f9328c48481ed649bb34c5159d95b1..256514be183085b52eb476f1ed8bb522361ebbb6 100644
+--- a/built/node.js
++++ b/built/node.js
+@@ -1,6 +1,6 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+-exports.TEXT = exports.PLAIN = exports.FN = exports.LINK = exports.N_URL = exports.HASHTAG = exports.MENTION = exports.MATH_INLINE = exports.INLINE_CODE = exports.STRIKE = exports.ITALIC = exports.SMALL = exports.BOLD = exports.EMOJI_CODE = exports.UNI_EMOJI = exports.CENTER = exports.MATH_BLOCK = exports.CODE_BLOCK = exports.SEARCH = exports.QUOTE = exports.isMfmBlock = void 0;
++exports.TEXT = exports.PLAIN = exports.FN = exports.LINK = exports.N_URL = exports.HASHTAG = exports.MENTION = exports.MATH_INLINE = exports.INLINE_CODE = exports.STRIKE = exports.ITALIC = exports.SMALL = exports.BOLD = exports.RJ_NUMBER = exports.EMOJI_CODE = exports.UNI_EMOJI = exports.CENTER = exports.MATH_BLOCK = exports.CODE_BLOCK = exports.SEARCH = exports.QUOTE = exports.isMfmBlock = void 0;
+ const blockTypes = ['quote', 'search', 'blockCode', 'mathBlock', 'center'];
+ function isMfmBlock(node) {
+     return blockTypes.includes(node.type);
+@@ -20,6 +20,8 @@ const UNI_EMOJI = (value) => { return { type: 'unicodeEmoji', props: { emoji: va
+ exports.UNI_EMOJI = UNI_EMOJI;
+ const EMOJI_CODE = (name) => { return { type: 'emojiCode', props: { name: name } }; };
+ exports.EMOJI_CODE = EMOJI_CODE;
++const RJ_NUMBER = (rjNumber, url) => { return { type: 'rjNumber', props: { rjNumber, url } }; };
++exports.RJ_NUMBER = RJ_NUMBER;
+ const BOLD = (children) => { return { type: 'bold', children }; };
+ exports.BOLD = BOLD;
+ const SMALL = (children) => { return { type: 'small', children }; };

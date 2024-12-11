@@ -4,7 +4,7 @@
  */
 
 import { Directive } from 'vue';
-import { getBgColor } from '@/scripts/tms/get-bg-color.js';
+import { getBgColor } from '@/scripts/get-bg-color.js';
 
 // eslint-disable-next-line import/no-default-export
 export default {

@@ -84,7 +84,3 @@ definePageMetadata(() => ({
 	icon: 'ti ti-webhook',
 }));
 </script>
-
-<style lang="scss" module>
-
-</style>

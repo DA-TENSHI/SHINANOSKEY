@@ -7,17 +7,17 @@ SPDX-License-Identifier: AGPL-3.0-only
 <a
 	ref="rootEl"
 	:class="[$style.root, '_link']"
-	:href="props.url"
+	:href="url"
 	target="_blank"
 	rel="nofollow noopener"
-	:title="props.rjNumber"
+	:title="rjNumber"
 >
-	<span :class="[$style.inner, '_monospace']">{{ props.rjNumber }}</span>
+	<span :class="[$style.inner, '_monospace']">{{ rjNumber }}</span>
 </a>
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, shallowRef } from 'vue';
+import { defineAsyncComponent, useTemplateRef } from 'vue';
 import { isEnabledUrlPreview } from '@/instance.js';
 import { popup } from '@/os.js';
 import { useTooltip } from '@/scripts/use-tooltip.js';
@@ -27,7 +27,7 @@ const props = defineProps<{
 	url: string;
 }>();
 
-const rootEl = shallowRef<HTMLAnchorElement | null>(null);
+const rootEl = useTemplateRef('rootEl');
 
 useTooltip(rootEl, (showing) => {
 	if (isEnabledUrlPreview.value && rootEl.value != null) {

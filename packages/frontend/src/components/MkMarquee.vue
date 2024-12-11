@@ -4,7 +4,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <script lang="ts">
-import { h, onMounted, onUnmounted, ref, watch } from 'vue';
+import { h, onMounted, ref, watch } from 'vue';
 
 // eslint-disable-next-line import/no-default-export
 export default {
@@ -43,9 +43,6 @@ export default {
 
 		onMounted(() => {
 			calc();
-		});
-
-		onUnmounted(() => {
 		});
 
 		return {

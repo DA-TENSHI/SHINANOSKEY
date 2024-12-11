@@ -68,7 +68,6 @@ const ytFetch = (): void => {
 };
 
 ytFetch();
-
 </script>
 
 <style lang="scss">

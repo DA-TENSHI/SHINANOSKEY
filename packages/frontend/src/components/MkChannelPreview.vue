@@ -45,14 +45,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</div>
 	</template>
 
-	<script lang="ts" setup>
-	import { computed, ref, watch } from 'vue';
-	import { i18n } from '@/i18n.js';
-	import { miLocalStorage } from '@/local-storage.js';
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
+import * as Misskey from 'misskey-js';
+import { i18n } from '@/i18n.js';
+import { miLocalStorage } from '@/local-storage.js';
 
-	const props = defineProps<{
-		channel: Record<string, any>;
-	}>();
+const props = defineProps<{
+	channel: Misskey.entities.Channel;
+}>();
 
 	const getLastReadedAt = (): number | null => {
 		return miLocalStorage.getItemAsJson(`channelLastReadedAt:${props.channel.id}`) ?? null;
@@ -208,17 +209,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 		}
 	}
 
-	.indicator {
-		position: absolute;
-		top: 0;
-		right: 0;
-		transform: translate(25%, -25%);
-		background-color: var(--MI_THEME-accent);
-		border: solid var(--MI_THEME-bg) 4px;
-		border-radius: 100%;
-		width: 1.5rem;
-		height: 1.5rem;
-		aspect-ratio: 1 / 1;
-	}
-
-	</style>
+.indicator {
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translate(25%, -25%);
+	background-color: var(--MI_THEME-accent);
+	border: solid var(--MI_THEME-bg) 4px;
+	border-radius: 100%;
+	width: 1.5rem;
+	height: 1.5rem;
+	aspect-ratio: 1 / 1;
+}
+</style>

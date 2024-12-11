@@ -63,6 +63,10 @@ services:
         target: /misskey/healthcheck.sh
         read_only: true
       - type: bind
+        source: ../../../patches
+        target: /misskey/patches
+        read_only: true
+      - type: bind
         source: ../../../package.json
         target: /misskey/package.json
         read_only: true

@@ -10,6 +10,7 @@ import type * as Misskey from 'misskey-js';
 import { components } from '@/components/index.js';
 import { directives } from '@/directives/index.js';
 import MkMediaImage from '@/components/MkMediaImage.vue';
+import { sleep } from './utils.js';
 
 describe('MkMediaImage', () => {
 	const renderMediaImage = (image: Partial<Misskey.entities.DriveFile>): RenderResult => {
@@ -29,7 +30,7 @@ describe('MkMediaImage', () => {
 					comment: null,
 					properties: {},
 					...image,
-				} as DriveFile,
+				} as Misskey.entities.DriveFile,
 			},
 			global: { directives, components },
 		});
@@ -43,9 +44,11 @@ describe('MkMediaImage', () => {
 		const mkMediaImage = renderMediaImage({
 			type: 'image/jpeg',
 		});
+		// imageRefの更新待ち
+		await sleep();
 		const [gif, alt] = await Promise.all([
-			mkMediaImage.queryByText('GIF'),
-			mkMediaImage.queryByText('ALT'),
+			mkMediaImage.queryByTestId('gif'),
+			mkMediaImage.queryByTestId('alt'),
 		]);
 		assert.ok(!gif);
 		assert.ok(!alt);
@@ -55,9 +58,11 @@ describe('MkMediaImage', () => {
 		const mkMediaImage = renderMediaImage({
 			type: 'image/gif',
 		});
+		// imageRefの更新待ち
+		await sleep();
 		const [gif, alt] = await Promise.all([
-			mkMediaImage.queryByText('GIF'),
-			mkMediaImage.queryByText('ALT'),
+			mkMediaImage.queryByTestId('gif'),
+			mkMediaImage.queryByTestId('alt'),
 		]);
 		assert.ok(gif);
 		assert.ok(!alt);
@@ -67,9 +72,11 @@ describe('MkMediaImage', () => {
 		const mkMediaImage = renderMediaImage({
 			type: 'image/apng',
 		});
+		// imageRefの更新待ち
+		await sleep();
 		const [gif, alt] = await Promise.all([
-			mkMediaImage.queryByText('GIF'),
-			mkMediaImage.queryByText('ALT'),
+			mkMediaImage.queryByTestId('gif'),
+			mkMediaImage.queryByTestId('alt'),
 		]);
 		assert.ok(gif);
 		assert.ok(!alt);
@@ -80,9 +87,11 @@ describe('MkMediaImage', () => {
 			type: 'image/png',
 			comment: 'Misskeyのロゴです',
 		});
+		// imageRefの更新待ち
+		await sleep();
 		const [gif, alt] = await Promise.all([
-			mkMediaImage.queryByText('GIF'),
-			mkMediaImage.queryByText('ALT'),
+			mkMediaImage.queryByTestId('gif'),
+			mkMediaImage.queryByTestId('alt'),
 		]);
 		assert.ok(!gif);
 		assert.ok(alt);
@@ -93,9 +102,11 @@ describe('MkMediaImage', () => {
 			type: 'image/gif',
 			comment: 'Misskeyのロゴです',
 		});
+		// imageRefの更新待ち
+		await sleep();
 		const [gif, alt] = await Promise.all([
-			mkMediaImage.queryByText('GIF'),
-			mkMediaImage.queryByText('ALT'),
+			mkMediaImage.queryByTestId('gif'),
+			mkMediaImage.queryByTestId('alt'),
 		]);
 		assert.ok(gif);
 		assert.ok(alt);

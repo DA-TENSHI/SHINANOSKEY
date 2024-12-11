@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<MkA v-tooltip.noDelay.right="i18n.ts.timeline" :class="$style.item" :activeClass="$style.active" to="/" exact>
 				<i :class="$style.itemIcon" class="ti ti-home ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.timeline }}</span>
 			</MkA>
-			<template v-for="item in menu">
+			<template v-for="item in menu" :key="item">
 				<div v-if="item === '-'" :class="$style.divider"></div>
 				<component
 					:is="navbarItemDef[item].to ? 'MkA' : 'button'"
@@ -24,7 +24,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					class="_button"
 					:class="[$style.item, { [$style.active]: navbarItemDef[item].active }]"
 					:activeClass="$style.active"
-					:to="navbarItemDef[item].to"
+					v-bind="navbarItemDef[item].to ? { to: navbarItemDef[item].to } : {}"
 					v-on="navbarItemDef[item].action ? { click: navbarItemDef[item].action } : {}"
 				>
 					<i class="ti-fw" :class="[$style.itemIcon, navbarItemDef[item].icon]"></i><span :class="$style.itemText">{{ navbarItemDef[item].title }}</span>
@@ -35,7 +35,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</component>
 			</template>
 			<div :class="$style.divider"></div>
-			<MkA v-if="$i.isAdmin || $i.isModerator" v-tooltip.noDelay.right="i18n.ts.controlPanel" :class="$style.item" :activeClass="$style.active" to="/admin">
+			<MkA v-if="$i?.isAdmin || $i?.isModerator" v-tooltip.noDelay.right="i18n.ts.controlPanel" :class="$style.item" :activeClass="$style.active" to="/admin">
 				<i :class="$style.itemIcon" class="ti ti-dashboard ti-fw"></i><span :class="$style.itemText">{{ i18n.ts.controlPanel }}</span>
 			</MkA>
 			<button class="_button" :class="$style.item" @click="more">
@@ -50,7 +50,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</MkA>
 		</div>
 		<div :class="$style.bottom">
-			<button v-tooltip.noDelay.right="i18n.ts.note" class="_button" :class="[$style.post]" data-cy-open-post-form @click="os.post">
+			<button v-tooltip.noDelay.right="i18n.ts.note" class="_button" :class="[$style.post]" data-cy-open-post-form @click="() => os.post()">
 				<i class="ti ti-pencil ti-fw" :class="$style.postIcon"></i><span :class="$style.postText">{{ i18n.ts.note }}</span>
 			</button>
 			<div :class="$style.accountButton">
@@ -58,22 +58,32 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 		</div>
 	</div>
+	<button v-if="!forceIconOnly" class="_button" :class="$style.toggleButton" @click="toggleIconOnly">
+		<svg viewBox="0 0 16 64" :class="$style.toggleButtonShape">
+			<g transform="matrix(0.333333,0,0,0.222222,0.000895785,21.3333)">
+				<path
+					d="M47.488,7.995C47.79,10.11 47.943,12.266 47.943,14.429C47.997,26.989 47.997,84 47.997,84C47.997,84 44.018,118.246 23.997,133.5C-0.374,152.07 -0.003,192 -0.003,192L-0.003,-96C-0.003,-96 0.151,-56.216 23.997,-37.5C40.861,-24.265 46.043,-1.243 47.488,7.995Z"
+					style="fill:var(--MI_THEME-navBg);"
+				/>
+			</g>
+		</svg>
+		<i :class="iconOnly ? 'ti ti-chevron-right' : 'ti ti-chevron-left'" style="font-size: 12px; margin-left: -8px;"></i>
+	</button>
 </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, ref } from 'vue';
 import * as os from '@/os.js';
 import { navbarItemDef } from '@/navbar.js';
 import { $i } from '@/account.js';
 import { defaultStore } from '@/store.js';
 import { i18n } from '@/i18n.js';
+import { getHTMLElementOrNull } from '@/scripts/get-dom-node-or-null.js';
 import TmsAccountButton from '@/components/TmsAccountButton.vue';
 import TmsServerLogo from '@/components/TmsServerLogo.vue';
 
-const iconOnly = ref(false);
-
-const menu = computed(() => defaultStore.state.menu);
+const menu = computed(() => defaultStore.reactiveState.menu.value);
 const otherMenuItemIndicated = computed(() => {
 	for (const def in navbarItemDef) {
 		if (menu.value.includes(def)) continue;
@@ -82,24 +92,28 @@ const otherMenuItemIndicated = computed(() => {
 	return false;
 });
 
-const calcViewState = () => {
-	iconOnly.value = (window.innerWidth <= 1279) || (defaultStore.state.menuDisplay === 'sideIcon');
-};
-
-calcViewState();
-
-window.addEventListener('resize', calcViewState, { passive: true });
-
-watch(defaultStore.reactiveState.menuDisplay, () => {
-	calcViewState();
-});
-
 function more(ev: MouseEvent) {
+	const target = getHTMLElementOrNull(ev.currentTarget ?? ev.target);
+	if (target == null) return;
+
 	const { dispose } = os.popup(defineAsyncComponent(() => import('@/components/MkLaunchPad.vue')), {
-		src: ev.currentTarget ?? ev.target,
+		src: target,
 	}, {
 		closed: () => dispose(),
 	});
+}
+
+const forceIconOnly = ref(window.innerWidth <= 1279);
+const iconOnly = computed(() => {
+	return forceIconOnly.value || (defaultStore.reactiveState.menuDisplay.value === 'sideIcon');
+});
+
+window.addEventListener('resize', () => {
+	forceIconOnly.value = window.innerWidth <= 1279;
+}, { passive: true });
+
+function toggleIconOnly() {
+	defaultStore.set('menuDisplay', iconOnly.value ? 'sideFull' : 'sideIcon');
 }
 </script>
 
@@ -129,6 +143,38 @@ function more(ev: MouseEvent) {
 	contain: strict;
 	display: flex;
 	flex-direction: column;
+	direction: rtl; // スクロールバーを左に表示したいため
+}
+
+.top {
+	direction: ltr;
+}
+
+.middle {
+	direction: ltr;
+}
+
+.bottom {
+	direction: ltr;
+}
+
+.toggleButton {
+	position: fixed;
+	bottom: 20px;
+	left: var(--nav-width);
+	z-index: 1001;
+	width: 16px;
+	height: 64px;
+	box-sizing: border-box;
+}
+
+.toggleButtonShape {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	width: 16px;
+	height: 64px;
 }
 
 .root:not(.iconOnly) {
@@ -288,6 +334,10 @@ function more(ev: MouseEvent) {
 		position: relative;
 		font-size: 0.9em;
 	}
+
+	.toggleButton {
+		left: var(--nav-width);
+	}
 }
 
 .root.iconOnly {
@@ -445,6 +495,10 @@ function more(ev: MouseEvent) {
 			right: 4px;
 			font-size: 10px;
 		}
+	}
+
+	.toggleButton {
+		left: var(--nav-icon-only-width);
 	}
 }
 </style>

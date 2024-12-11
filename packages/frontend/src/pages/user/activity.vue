@@ -37,5 +37,4 @@ import MkHeatmap from '@/components/MkHeatmap.vue';
 const props = defineProps<{
 	user: Misskey.entities.User;
 }>();
-
 </script>

@@ -16,12 +16,11 @@ import { onMounted, ref } from 'vue';
 import * as os from '@/os.js';
 import MkReactionIcon from '@/components/MkReactionIcon.vue';
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
 	reaction: string;
 	x: number;
 	y: number;
-}>(), {
-});
+}>();
 
 const emit = defineEmits<{
 	(ev: 'end'): void;

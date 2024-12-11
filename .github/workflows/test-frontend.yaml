@@ -1,0 +1,167 @@
+name: Test (frontend)
+
+on:
+  push:
+    branches:
+      - taiyme
+      - release
+    paths:
+      - .github/workflows/test-frontend.yaml
+      - packages/frontend/**/*
+      - packages/frontend-embed/**/*
+      - packages/frontend-shared/**/*
+      - packages/backend/**/*
+      - packages/misskey-js/**/*
+
+  pull_request_target:
+    branches:
+      - taiyme
+      - release
+    paths:
+      - packages/frontend/**/*
+      - packages/frontend-embed/**/*
+      - packages/frontend-shared/**/*
+      - packages/backend/**/*
+      - packages/misskey-js/**/*
+
+jobs:
+  pre-checkout:
+    name: Pre checkout
+    uses: ./.github/workflows/pre-checkout.yaml
+
+  vitest:
+    name: Vitest
+    runs-on: ubuntu-22.04
+    needs:
+      - pre-checkout
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.1
+        with:
+          persist-credentials: false
+          ref: ${{ needs.pre-checkout.outputs.sha }}
+          fetch-depth: 1
+          submodules: true
+
+      - name: Enable corepack
+        run: |
+          corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        run: |
+          pnpm i --frozen-lockfile
+
+      - name: Copy config
+        run: |
+          cp .github/misskey/test.yml .config
+
+      - name: Build
+        run: |
+          pnpm build
+
+      - name: Test
+        run: |
+          pnpm --filter frontend test
+
+      # TODO: カバレッジレポートはまた今度
+
+  e2e:
+    name: E2E
+    runs-on: ubuntu-22.04
+    needs:
+      - pre-checkout
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - chrome
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 54312:5432
+        env:
+          POSTGRES_DB: test-misskey
+          POSTGRES_HOST_AUTH_METHOD: trust
+      redis:
+        image: redis:7
+        ports:
+          - 56312:6379
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.1
+        with:
+          persist-credentials: false
+          ref: ${{ needs.pre-checkout.outputs.sha }}
+          fetch-depth: 1
+          submodules: true
+
+      # https://github.com/cypress-io/cypress-docker-images/issues/150
+      # - name: Install mplayer for FireFox
+      #   if: ${{ matrix.browser == 'firefox' }}
+      #   run: |
+      #     sudo apt install mplayer -y
+
+      # - uses: browser-actions/setup-firefox@955a5d42b5f068a8917c6a4ff1656a2235c66dfb # v1.5.2
+      #   if: ${{ matrix.browser == 'firefox' }}
+
+      - name: Enable corepack
+        run: |
+          corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        run: |
+          pnpm i --frozen-lockfile
+
+      - name: Copy config
+        run: |
+          cp .github/misskey/test.yml .config
+
+      - name: Build
+        run: |
+          pnpm build
+
+      # https://github.com/cypress-io/cypress/issues/4351#issuecomment-559489091
+      - name: ALSA Env
+        run: |
+          echo -e 'pcm.!default {\n type hw\n card 0\n}\n\nctl.!default {\n type hw\n card 0\n}' > ~/.asoundrc
+
+      # XXX: This tries reinstalling Cypress if the binary is not cached
+      # Remove this when the cache issue is fixed
+      - name: Cypress install
+        run: |
+          pnpm exec cypress install
+
+      - name: Cypress run
+        uses: cypress-io/github-action@f1f0912d392f0d06bdd01fb9ebe3b3299e5806fb # v6.7.7
+        timeout-minutes: 15
+        with:
+          install: false
+          start: pnpm start:test
+          wait-on: 'http://localhost:61812'
+          headed: true
+          browser: ${{ matrix.browser }}
+
+      - uses: actions/upload-artifact@v4.4.3
+        if: failure()
+        with:
+          name: ${{ matrix.browser }}-cypress-screenshots
+          path: cypress/screenshots
+
+      - uses: actions/upload-artifact@v4.4.3
+        if: always()
+        with:
+          name: ${{ matrix.browser }}-cypress-videos
+          path: cypress/videos

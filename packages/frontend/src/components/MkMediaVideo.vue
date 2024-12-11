@@ -157,7 +157,7 @@ import type { MenuItem } from '@/types/menu.js';
 import { i18n } from '@/i18n.js';
 import { confirm, popupMenu } from '@/os.js';
 import { defaultStore } from '@/store.js';
-import { isFullscreenNotSupported } from '@/scripts/device-kind.js';
+import { exitFullscreen, requestFullscreen } from '@/scripts/fullscreen.js';
 import { type Keymap } from '@/scripts/hotkey.js';
 import hasAudio from '@/scripts/media-has-audio.js';
 import { getMediaMenu } from '@/scripts/tms/get-media-menu.js';
@@ -179,17 +179,18 @@ const {
 	reactiveIAmOwner: iAmOwnerRef,
 } = useReactiveDriveFile(() => props.video);
 
-	const showVideo = async () => {
-		if (!hideRef.value) return;
-		if (sensitiveRef.value && defaultStore.state.confirmWhenRevealingSensitiveMedia) {
-			const { canceled } = await confirm({
-				type: 'question',
-				text: i18n.ts.sensitiveMediaRevealConfirm,
-			});
-			if (canceled) return;
-		}
-		hideRef.value = false;
-	};
+const showVideo = async (ev: MouseEvent) => {
+	if (!hideRef.value) return;
+	if (sensitiveRef.value && defaultStore.state.confirmWhenRevealingSensitiveMedia) {
+		ev.stopPropagation();
+		const { canceled } = await confirm({
+			type: 'question',
+			text: i18n.ts.sensitiveMediaRevealConfirm,
+		});
+		if (canceled) return;
+	}
+	hideRef.value = false;
+};
 
 	// Menu
 	const menuShowing = ref(false);
@@ -357,29 +358,24 @@ const {
 		}
 	}
 
-	function toggleFullscreen() {
-		if (isFullscreenNotSupported && videoEl.value) {
-			if (isFullscreen.value) {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				//@ts-ignore
-				videoEl.value.webkitExitFullscreen();
-				isFullscreen.value = false;
-			} else {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				//@ts-ignore
-				videoEl.value.webkitEnterFullscreen();
-				isFullscreen.value = true;
-			}
-		} else if (playerEl.value) {
-			if (isFullscreen.value) {
-				document.exitFullscreen();
-				isFullscreen.value = false;
-			} else {
-				playerEl.value.requestFullscreen({ navigationUI: 'hide' });
-				isFullscreen.value = true;
-			}
-		}
+function toggleFullscreen() {
+	if (playerEl.value == null || videoEl.value == null) return;
+	if (isFullscreen.value) {
+		exitFullscreen({
+			videoEl: videoEl.value,
+		});
+		isFullscreen.value = false;
+	} else {
+		requestFullscreen({
+			videoEl: videoEl.value,
+			playerEl: playerEl.value,
+			options: {
+				navigationUI: 'hide',
+			},
+		});
+		isFullscreen.value = true;
 	}
+}
 
 	function togglePictureInPicture() {
 		if (videoEl.value) {
@@ -477,12 +473,14 @@ const {
 		if (videoEl.value) videoEl.value.loop = to;
 	});
 
-	watch(hideRef, (to) => {
-		if (to && isFullscreen.value) {
-			document.exitFullscreen();
-			isFullscreen.value = false;
-		}
-	});
+watch(hideRef, (to) => {
+	if (videoEl.value && to && isFullscreen.value) {
+		exitFullscreen({
+			videoEl: videoEl.value,
+		});
+		isFullscreen.value = false;
+	}
+});
 
 	onMounted(() => {
 		init();
