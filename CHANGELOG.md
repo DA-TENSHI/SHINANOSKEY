@@ -12,7 +12,8 @@
 - Fix: ユーザーのプロフィール画面をアドレス入力などで直接表示した際に概要タブの描画に失敗する問題の修正( #15032 )
 - Fix: 起動前の疎通チェックが機能しなくなっていた問題を修正  
   (Cherry-picked from https://activitypub.software/TransFem-org/Sharkey/-/merge_requests/737)
-
+- Fix: localOnlyなノートの時は配送処理そのものを起動しない
+  (Cherry-picked from https://github.com/samunohito/misskey/commit/62104def2c314a0f66f25edcafd3c09afdb3ab89#diff-44848fc4891ad8cf42ab0d38e74a0797083d5a76591073745c3c259a43693dbeR680)
 
 ## 2024.11.0
 
